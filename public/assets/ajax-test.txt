@@ -1,0 +1,2 @@
+The fragment for showing ajax that located at /assets/ajax-test.html
+Showing perfectly fine in web page
