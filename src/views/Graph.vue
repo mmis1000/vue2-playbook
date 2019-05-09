@@ -41,7 +41,7 @@
               <input type="number" v-model="sub.x">
               <input type="number" v-model="sub.y">
               <button @pointerdown="addChild(sub)">Add child</button>
-              <button @pointerdown="removeChild(sub)">Remove child</button>
+              <button v-if="depth > 0" @pointerdown="removeMe(items, sub)">Remove Me</button>
               <sub-tree v-bind="{depth: depth + 1, data: sub.children, template}"></sub-tree>
             </drag>
           </div>
@@ -66,13 +66,16 @@ export default {
     };
   },
   methods: {
-    removeChild(item) {
-      item.children.pop()
+    removeMe(items, sub) {
+      var index = items.indexOf(sub)
+      if (index >= 0) {
+        items.splice(index, 1)
+      }
     },
     addChild(item, x, y) {
       item.children.push({
-        x: x != null ? x : ~~((Math.random() * 400) / 20) * 20 - 200,
-        y: y != null ? y : ~~((Math.random() * 400) / 20) * 20 - 200,
+        x: x != null ? x : (item.children.length + 1) * 20,
+        y: y != null ? y : (item.children.length + 1) * 20,
         background: `rgba(${192 + ~~(64 * Math.random())}, ${192 +
           ~~(64 * Math.random())}, ${192 + ~~(64 * Math.random())}, 0.5)`,
         children: []
@@ -122,10 +125,12 @@ export default {
     display: inline-block;
     width: 78px;
     height: 25px;
-    line-height: 28px;
+    line-height: 21px;
+    font-size: 0.6em;
     padding: 0px;
     overflow: hidden;
     border: 2px solid #eee;
+    white-space: nowrap;
   }
 }
 </style>
