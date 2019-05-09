@@ -17,7 +17,7 @@
               class="main-item"
               :left.sync="sub.x"
               :top.sync="sub.y"
-              :options="{ grid: [20, 20] }"
+              :options="{ grid: [20, 20], containment: '.container' }"
             >
               <svg
                 style="position: absolute; pointer-events: none"
@@ -110,7 +110,7 @@ export default {
   border: 2px solid #ccc;
   .header {
     height: 20px;
-    color: black;
+    color: rgb(66, 66, 66);
   }
 
   > input {
