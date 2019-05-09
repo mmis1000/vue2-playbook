@@ -37,10 +37,11 @@
                   :style="{stroke: sub.background}"
                 ></line>
               </svg>
+              <div class="header">Item Depth {{depth}}</div>
               <input type="number" v-model="sub.x">
               <input type="number" v-model="sub.y">
               <button @pointerdown="addChild(sub)">Add child</button>
-              {{depth}}
+              <button @pointerdown="removeChild(sub)">Remove child</button>
               <sub-tree v-bind="{depth: depth + 1, data: sub.children, template}"></sub-tree>
             </drag>
           </div>
@@ -65,6 +66,9 @@ export default {
     };
   },
   methods: {
+    removeChild(item) {
+      item.children.pop()
+    },
     addChild(item, x, y) {
       item.children.push({
         x: x != null ? x : ~~((Math.random() * 400) / 20) * 20 - 200,
@@ -101,12 +105,27 @@ export default {
     box-sizing: border-box;
   }
 
-  height: 76px;
+  height: 96px;
   width: 156px;
   border: 2px solid #ccc;
+  .header {
+    height: 20px;
+    color: black;
+  }
+
   > input {
     width: 156px;
     height: 25px;
+  }
+
+  > button {
+    display: inline-block;
+    width: 78px;
+    height: 25px;
+    line-height: 28px;
+    padding: 0px;
+    overflow: hidden;
+    border: 2px solid #eee;
   }
 }
 </style>
