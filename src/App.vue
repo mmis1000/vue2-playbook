@@ -6,7 +6,9 @@
       <router-link to="/ajax">ajax test</router-link> |
       <router-link to="/recursive">recursion test</router-link> |
       <router-link to="/run-interval">set interval test</router-link> |
-      <router-link to="/raf">request animation frame test</router-link>
+      <router-link to="/raf">request animation frame test</router-link> |
+      <router-link to="/drag">draggable</router-link> |
+      <router-link to="/graph">graph</router-link>
     </div>
     <router-view/>
   </div>

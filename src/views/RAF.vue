@@ -2,7 +2,7 @@
   <div>
     <RequestAnimationFrame v-slot="{current}">
       <div class="run">
-        <div class="filled" :style="{width: (current / 10) % 300 + 'px'}">
+        <div class="filled" :style="{width: (current / 50) % 300 + 'px'}">
           {{current}}
         </div>
       </div>
