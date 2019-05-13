@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding: 1em">
     {{num}}
     <input type="number" v-model.number="interval">
     <RunInterval @tick="add" :interval="intervalFiltered"></RunInterval>

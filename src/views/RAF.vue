@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding: 1em">
     <RequestAnimationFrame v-slot="{current}">
       <div class="run">
         <div class="filled" :style="{width: (current / 50) % 300 + 'px'}">

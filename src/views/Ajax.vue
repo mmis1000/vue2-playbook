@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding: 1em">
     <input type="text" v-model="src">
     <pre>{{text}}</pre>
     <Ajax :src="src" @success="onAjaxFinish"></Ajax>

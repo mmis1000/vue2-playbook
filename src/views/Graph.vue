@@ -1,6 +1,8 @@
 <template>
   <div class="page">
-    combine draggable component and recusive component, these magic can be easilly achieved
+    <div class="top">
+      combine draggable component and recusive component, these magic can be easilly achieved
+    </div>
     <div class="container">
       <div class="center">
         <tree-root :data="items" v-slot="{depth, data: items, template}">
@@ -89,9 +91,15 @@ export default {
 .page {
   background: #333;
   color: white;
+  height: 100vh;
+  flex-direction: column;
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
 }
 .container {
-  height: 500px;
+  flex-grow: 1;
+  flex-shrink: 1;
   display: flex;
   justify-content: center;
 }

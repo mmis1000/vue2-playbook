@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding: 1em">
     <input type="number" v-model.number="x">
     <input type="number" v-model.number="y">
     <input

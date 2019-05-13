@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding: 1em">
     tree render
     <ul>
       <li>
