@@ -18,7 +18,7 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/Ajax.vue')
+      component: () => import(/* webpackChunkName: "ajax" */ './views/Ajax.vue')
     },
     {
       path: '/raf',
@@ -26,7 +26,7 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/RAF.vue')
+      component: () => import(/* webpackChunkName: "raf" */ './views/RAF.vue')
     },
     {
       path: '/run-interval',
@@ -34,7 +34,7 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/RunInterval.vue')
+      component: () => import(/* webpackChunkName: "run-interval" */ './views/RunInterval.vue')
     },
     {
       path: '/recursive',
@@ -42,7 +42,7 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/Recursive.vue')
+      component: () => import(/* webpackChunkName: "recursive" */ './views/Recursive.vue')
     },
     {
       path: '/drag',
@@ -50,7 +50,7 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/Drag.vue')
+      component: () => import(/* webpackChunkName: "drag" */ './views/Drag.vue')
     },
     {
       path: '/graph',
@@ -58,7 +58,15 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/Graph.vue')
+      component: () => import(/* webpackChunkName: "graph" */ './views/Graph.vue')
+    },
+    {
+      path: '/clock',
+      name: 'clock',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "clock" */ './views/Clock.vue')
     },
     {
       path: '/about',

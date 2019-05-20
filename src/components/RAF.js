@@ -9,6 +9,7 @@ export default {
   methods: {
     tick() {
       this.current = Date.now()
+      this.$emit('tick', this.current)
       this._id = requestAnimationFrame(this.tick)
     }
   },

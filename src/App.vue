@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="nav">
+    <div class="nav" v-if="showNav">
       <router-link to="/">Home</router-link>
       <router-link to="/about">About</router-link>
       <router-link to="/ajax">ajax test</router-link>
@@ -9,12 +9,27 @@
       <router-link to="/raf">request animation frame test</router-link>
       <router-link to="/drag">draggable</router-link>
       <router-link to="/graph">graph</router-link>
+      <router-link to="/clock">clock</router-link>
     </div>
     <div class="main">
+      <div class="toggle" @click="showNav = !showNav">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+      </div>
       <router-view/>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data () {
+    return {
+      showNav: true
+    }
+  }
+}
+</script>
+
 
 <style>
 body {
@@ -26,6 +41,9 @@ body {
 </style>
 
 <style lang="scss" scoped>
+@import url(https://use.fontawesome.com/releases/v5.8.2/css/all.css);
+
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -68,6 +86,25 @@ body {
     .main {
       flex-grow: 1;
       flex-shrink: 1;
+      position: relative;
+
+      .toggle {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 48px;
+        width: 48px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+
+        opacity: 0.2;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
     }
     .nav {
       width: 30%;

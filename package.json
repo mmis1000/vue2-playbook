@@ -11,6 +11,7 @@
     "core-js": "^2.6.5",
     "debounce": "^1.2.0",
     "draggabilly": "^2.2.0",
+    "enhanced-resolve": "^4.1.0",
     "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
     "vue": "^2.6.6",
