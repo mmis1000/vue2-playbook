@@ -2,70 +2,38 @@
   <div class="clock">
     <RAF @tick="current = $event"/>
 
-    <div class="wrapper">
-      <MyNumber :base="2" :value="digits[0]"/>
-      <MyNumber :base="4" :value="digits[1]"/>
-      <span class="seperator">:</span>
-      <MyNumber :base="6" :value="digits[2]"/>
-      <MyNumber :base="10" :value="digits[3]"/>
-      <span class="seperator">:</span>
-      <MyNumber :base="6" :value="digits[4]"/>
-      <MyNumber :base="10" :value="digits[5]"/>
-    </div>
+    <Clock :current="current"/>
+    <Clock :current="reversed"/>
+    <Clock :current="fast"/>
+    <Clock :current="slow"/>
+    <Clock :current="current" :animationFunction="i => Math.sin((i * 2 - 1) * Math.PI / 2) * 0.5 + 0.5"/>
   </div>
 </template>
 
 <script>
-import RotatingNumber from "@/components/RotatingNumber"
+import Clock from "@/components/Clock"
 import RequestAnimationFrame from '@/components/RAF'
 
 export default {
   components: {
-    MyNumber: RotatingNumber,
+    Clock: Clock,
     RAF: RequestAnimationFrame
   },
   data () {
     return {
-      current: Date.now()
+      current: Date.now(),
+      initial: Date.now()
     };
   },
   computed: {
-    digits () {
-      var current = this.currentDigits
-      var next = this.nextDigits
-      var percentage = (this.current % 1000) / 1000
-
-      return current.map((d, i) => {
-        if (d !== next[i]) {
-          return d + percentage
-        } else {
-          return d
-        }
-      })
+    fast () {
+      return this.initial + (this.current - this.initial + Math.random() * 16) * 10
     },
-    currentDigits () {
-      return this.computeDigits(this.current)
+    slow () {
+      return this.initial + (this.current - this.initial) / 10
     },
-    nextDigits () {
-      return this.computeDigits(this.current + 1000)
-    }
-  },
-  methods: {
-    computeDigits (timeMs) {
-      const date = new Date(timeMs)
-
-      var sec = date.getSeconds()
-      var min = date.getMinutes()
-      var hour = date.getHours()
-
-      return [
-        ~~(hour / 10), 
-        hour % 10, 
-        ~~(min / 10), 
-        min % 10, 
-        ~~(sec / 10), 
-        sec % 10
-      ]
+    reversed () {
+      return this.initial - (this.current - this.initial)
     }
   }
 }
@@ -78,25 +46,16 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+
+@media screen and (max-width: 500px) {
+  /deep/ .wrapper {
+    font-size: 40px;
+  }
 }
 
 /deep/ {
   font-family: 'Major Mono Display', monospace;
-}
-
-.seperator {
-  font-size: 50px;
-  height: 1.2em;
-  width: 1.2em;
-  line-height: 1.2em;
-  text-align: center;
-  overflow: hidden;
-  display: inline-block;
-
-  transform: translateY(-0.1em)
-}
-
-.wrapper {
-  border-bottom: 1px solid #bbb;
 }
 </style>

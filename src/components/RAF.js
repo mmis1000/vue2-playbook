@@ -23,8 +23,12 @@ export default {
     cancelAnimationFrame(this.tick)
   },
   render() {
-    return this.$scopedSlots.default({ 
-      current: this.current
-    })[0]
+    if (this.$scopedSlots.default) {
+      return this.$scopedSlots.default({ 
+        current: this.current
+      })[0]
+    } else {
+      return this.$createElement('link')
+    }
   }
 }

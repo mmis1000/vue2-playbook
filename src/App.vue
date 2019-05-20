@@ -3,13 +3,13 @@
     <div class="nav" v-if="showNav">
       <router-link to="/">Home</router-link>
       <router-link to="/about">About</router-link>
-      <router-link to="/ajax">ajax test</router-link>
-      <router-link to="/recursive">recursion test</router-link>
-      <router-link to="/run-interval">set interval test</router-link>
-      <router-link to="/raf">request animation frame test</router-link>
-      <router-link to="/drag">draggable</router-link>
-      <router-link to="/graph">graph</router-link>
-      <router-link to="/clock">clock</router-link>
+      <router-link to="/ajax">Ajax test</router-link>
+      <router-link to="/recursive">Recursion test</router-link>
+      <router-link to="/run-interval">Set interval test</router-link>
+      <router-link to="/raf">Request animation frame test</router-link>
+      <router-link to="/drag">Draggable</router-link>
+      <router-link to="/graph">Graph</router-link>
+      <router-link to="/clock">Clock</router-link>
     </div>
     <div class="main">
       <div class="toggle" @click="showNav = !showNav">
@@ -43,6 +43,12 @@ body {
 <style lang="scss" scoped>
 @import url(https://use.fontawesome.com/releases/v5.8.2/css/all.css);
 
+
+@media screen and (max-width: 450px) {
+  .toggle {
+    display: none;
+  }
+}
 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
