@@ -69,6 +69,14 @@ export default new Router({
       component: () => import(/* webpackChunkName: "clock" */ './views/Clock.vue')
     },
     {
+      path: '/sync-v-model-example',
+      name: 'sync-v-model-example',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "test" */ './views/SyncVModelExample.vue')
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting

@@ -10,6 +10,7 @@
       <router-link to="/drag">Draggable</router-link>
       <router-link to="/graph">Graph</router-link>
       <router-link to="/clock">Clock</router-link>
+      <router-link to="/sync-v-model-example">Sync and v-model example</router-link>
     </div>
     <div class="main">
       <div class="toggle" @click="showNav = !showNav">
