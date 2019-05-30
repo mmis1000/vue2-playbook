@@ -24,8 +24,8 @@
         left: `${Math.min(line.first.x, line.second.x) - 2}px`,
         top: `${Math.min(line.first.y, line.second.y) - 2}px`
       }"
-      :width="Math.max(Math.abs(line.first.x - line.second.x), 4)"
-      :height="Math.max(Math.abs(line.first.y - line.second.y), 4)"
+      :width="Math.max(Math.abs(line.first.x - line.second.x) + 4, 4)"
+      :height="Math.max(Math.abs(line.first.y - line.second.y) + 4, 4)"
     >
       <line
         :x1="(line.first.x - line.second.x) * (line.first.y - line.second.y) > 0 ? 2: Math.abs(line.first.x - line.second.x) + 2"
