@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <button @click="addItem">Add</button>
+    <div>
+      <button @click="addItem">Add</button>
+    </div>
     
     <drag
       v-for="item in items"
