@@ -63,12 +63,16 @@ export default {
   methods: {
     init(dragInst, left, top) {
       dragInst.setPosition(left, top)
+      dragInst.on('dragStart', () => {
+        this.$emit('dragStart')
+      })
       dragInst.on('dragMove', () => {
         this.dragging = true
         this.$emit('update:left', this.drag.position.x)
         this.$emit('update:top', this.drag.position.y)
       })
       dragInst.on('dragEnd', () => {
+        this.$emit('dragEnd')
         this.dragging = false
         if (this.pendingWrite) {
           this.drag.setPosition(this.pendingWrite.x, this.pendingWrite.y)

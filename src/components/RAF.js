@@ -3,13 +3,17 @@ export default {
   data() {
     return {
       _id: null,
-      current: Date.now()
+      prev: null,
+      current: Date.now(),
+      diff: null
     }
   },
   methods: {
     tick() {
+      this.prev = this.current
       this.current = Date.now()
-      this.$emit('tick', this.current)
+      this.diff = Math.max(this.current - this.prev, 8)
+      this.$emit('tick', this.current, this.prev, this.diff)
       this._id = requestAnimationFrame(this.tick)
     }
   },
