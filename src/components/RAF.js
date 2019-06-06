@@ -24,7 +24,7 @@ export default {
     requestAnimationFrame(this.tick)
   },
   beforeDestroy() {
-    cancelAnimationFrame(this.tick)
+    cancelAnimationFrame(this._id)
   },
   render() {
     if (this.$scopedSlots.default) {
