@@ -1,15 +1,7 @@
 jobs:
-  test:
-    docker:
-      - image: node 10.16.0-stretch-slim
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: npm ci
   site-build:
     docker:
-      - image: node 10.16.0-stretch-slim
+      - image: node:10.16.0-stretch-slim
     steps:
       - checkout
       - run:
@@ -23,7 +15,7 @@ jobs:
           paths: dist
   site-deploy:
     docker:
-      - image: node 10.16.0-stretch-slim
+      - image: node:8.10.0
     steps:
       - checkout
       - attach_workspace:
@@ -39,16 +31,14 @@ jobs:
             - "b5:9e:e2:7f:ce:f4:bd:ec:31:b9:98:e5:86:2b:b7:dd"
       - run:
           name: Deploy site to gh-pages branch
-          command: gh-pages --dist dist
+          command: gh-pages --dist dist --message "[skip ci] Updates"
 workflows:
   version: 2
   build:
     jobs:
-      - test
       - site-build
       - site-deploy:
           requires:
-            - test
             - site-build
           filters:
             branches:
