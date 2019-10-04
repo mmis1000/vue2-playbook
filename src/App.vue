@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="nav" v-if="showNav">
-      <router-link to="/">Home</router-link>
+      <router-link to="/home">Home</router-link>
       <router-link to="/about">About</router-link>
       <router-link to="/ajax">Ajax test</router-link>
       <router-link to="/recursive">Recursion test</router-link>
@@ -14,10 +14,12 @@
       <router-link to="/sync-v-model-example">Sync and v-model example</router-link>
     </div>
     <div class="main">
+      <transition name="slide">
+        <router-view :key="$route.path"/>
+      </transition>
       <div class="toggle" @click="showNav = !showNav">
         <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
       </div>
-      <router-view/>
     </div>
   </div>
 </template>
@@ -53,6 +55,12 @@ body {
 }
 
 #app {
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  min-height: 100vh;
+  flex-direction: column;
+
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -83,18 +91,21 @@ body {
       }
     }
   }
+
+  .main {
+    flex-grow: 1;
+    position: relative;
+  }
 }
 
 @media screen and (min-width: 600px ) {
   #app {
-    display: flex;
-    justify-content: stretch;
-    align-items: stretch;
-    min-height: 100vh;
+    flex-direction: row;
     .main {
       flex-grow: 1;
       flex-shrink: 1;
       position: relative;
+      overflow: hidden;
 
       .toggle {
         position: absolute;
@@ -146,5 +157,43 @@ body {
       }
     }
   }
+}
+
+.main {
+  backface-visibility: visible;
+  perspective: 200vw;
+  transform-style: preserve-3d;
+  perspective-origin: 50% 50%;
+
+  > * {
+    background: rgba(60, 60, 60, 0.5);
+  }
+}
+
+.slide-enter-active {
+  //transform-origin: right 50%;
+}
+
+.slide-leave-active {
+  //transform-origin: left 50%;
+}
+
+.slide-enter-active, .slide-leave-active {
+  transition: transform 1s linear, opacity 1s;
+  //transform: scaleX(1);
+  transform:  translateX(0%) rotateY(0deg) translateX(0%);
+  opacity: 1;
+}
+
+.slide-enter {
+  //transform: scaleX(0);
+  transform:  translateX(50%) rotateY(90deg) translateX(50%);
+  opacity: 0;
+}
+
+.slide-leave-to  {
+  //transform: scaleX(0);
+  transform: translateX(-50%) rotateY(-90deg) translateX(-50%) ;
+  opacity: 0;
 }
 </style>
