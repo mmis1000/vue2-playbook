@@ -1,57 +1,89 @@
+/* eslint-disable no-console */
+
 const path = require('path')
-const {
-    NodeJsInputFileSystem,
-    CachedInputFileSystem,
-    ResolverFactory
-} = require('enhanced-resolve');
 
 class LogPlugin {
-    constructor() {
+    constructor(path = null) {
         // create a resolver
-        this.resolver = ResolverFactory.createResolver({
-            // Typical usage will consume the `NodeJsInputFileSystem` + `CachedInputFileSystem`, which wraps the Node.js `fs` wrapper to add resilience + caching.
-            fileSystem: new CachedInputFileSystem(new NodeJsInputFileSystem(), 4000),
-            extensions: ['.js', '.json', '.vue'],
-            alias: {
-                '@': path.resolve(__dirname +'/', 'src/')
-            }
-            /* any other resolver options here. Options/defaults can be seen below */
-        });
+        this.relations = {}
+        this.filePath = path
+    }
+    rootPath (path) {
+        if (typeof path === 'string' && path.startsWith(__dirname)) {
+            return path.replace(__dirname, '')
+        } else {
+            return path
+        }
     }
     apply(compiler) {
         compiler.hooks.normalModuleFactory.tap('myplugin', this.onNormalModuleFactory.bind(this));
+        compiler.hooks.afterEmit.tap('myplugin', this.onAfterEmit.bind(this));
     }
-
 
     onNormalModuleFactory(compiler) {
-        compiler.hooks.beforeResolve.tapPromise('myplugin', this.onBeforeResolve.bind(this));
+        compiler.hooks.afterResolve.tapPromise('myplugin', this.onAfterResolve.bind(this));
     }
-    /**
-     * 
-     * @param {Request} request 
-     */
-    async onBeforeResolve(request) {
-        const resolveContext = {};
-        const lookupStartPath = request.context;
-        const requestPath = request.request.replace(/!.*$/, '');
-        // eslint-disable-next-line no-console
-        // console.log(lookupStartPath, requestPath)
-        try {
-            const filePath = await new Promise((resolve, reject) => {
-                this.resolver.resolve({}, lookupStartPath, requestPath, resolveContext, (err/*Error*/, filePath/*string*/) => {
-                    if (err) return reject(err)
-                    resolve(filePath)
-                });
-            })
 
-            const sourcePath = path.resolve(__dirname + '/', 'src')
-            if (filePath.startsWith(sourcePath) && request.contextInfo.issuer !== filePath.replace(/\?.*$/, '')) {
-                // eslint-disable-next-line no-console
-                console.error(request.contextInfo.issuer, filePath)
+    async onAfterResolve(request) {
+        if (
+            !request.context.match('node_modules') &&
+            request.resourceResolveData.context.issuer !== request.resourceResolveData.path &&
+            (!request.resourceResolveData.context.compiler || !request.resourceResolveData.context.compiler.startsWith('mini-css-extract-plugin ')) &&
+            !request.resourceResolveData.path.match('node_modules')
+        ) {
+            // console.log(request)
+            // console.log(`(${ rootPath(request.resourceResolveData.context.issuer) || '(root)' }) --> (${rootPath(request.resourceResolveData.path)})`)
+            // if (!request.resourceResolveData.context.issuer) {
+            //     console.log(request)
+            // }
+            const from = this.rootPath(request.resourceResolveData.context.issuer) || '(core)'
+            const to = this.rootPath(request.resourceResolveData.path) || '(core)'
+            this.relations[from] = this.relations[from] || []
+            if (this.relations[from].indexOf(to) < 0) {
+                this.relations[from].push(to)
             }
-        } catch (err) {
-            // eslint-disable-next-line no-console
-            // console.error(err)
+        }
+    }
+
+    async onAfterEmit() {
+        console.log(JSON.stringify(this.relations, 0, 4))
+        const walked = new Set()
+
+        let current = new Set(['(core)'])
+
+        const emitted = []
+
+        while (current.size > 0) {
+            const next = new Set()
+
+            for (let path of current) {
+                if (!walked.has(path)) {
+                    if (this.relations[path]) {
+                        emitted.push(`"${path}"->{${this.relations[path].map(i => `"${i}"`).join(' ')}}`)
+                        this.relations[path].forEach(i => next.add(i))
+                    }
+                    walked.add(path)
+                }
+            }
+
+            current = next
+        }
+
+        const file = `digraph hierarchy {
+    nodesep=1.0 // increases the separation between nodes
+
+    node [color=Red,fontname=Courier,shape=box] //All nodes will this shape and colour
+    edge [color=Blue] //All the lines look like this
+
+${emitted.map(i => '    ' + i).join('\n')}
+}
+`
+
+        console.log(file)
+
+        if (this.filePath) {
+            const fs = require('fs')
+            fs.writeFileSync(this.filePath, file)
         }
     }
 }
@@ -61,7 +93,7 @@ module.exports = {
 
     configureWebpack: {
         plugins: [
-            new LogPlugin()
+            new LogPlugin(path.resolve(__dirname, './dist/arch-uml.txt'))
         ]
     },
 }
