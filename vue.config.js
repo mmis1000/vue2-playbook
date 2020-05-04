@@ -31,11 +31,6 @@ class LogPlugin {
             (!request.resourceResolveData.context.compiler || !request.resourceResolveData.context.compiler.startsWith('mini-css-extract-plugin ')) &&
             !request.resourceResolveData.path.match('node_modules')
         ) {
-            // console.log(request)
-            // console.log(`(${ rootPath(request.resourceResolveData.context.issuer) || '(root)' }) --> (${rootPath(request.resourceResolveData.path)})`)
-            // if (!request.resourceResolveData.context.issuer) {
-            //     console.log(request)
-            // }
             const from = this.rootPath(request.resourceResolveData.context.issuer) || '(core)'
             const to = this.rootPath(request.resourceResolveData.path) || '(core)'
             this.relations[from] = this.relations[from] || []
@@ -78,8 +73,6 @@ class LogPlugin {
 ${emitted.map(i => '    ' + i).join('\n')}
 }
 `
-
-        console.log(file)
 
         if (this.filePath) {
             const fs = require('fs')
