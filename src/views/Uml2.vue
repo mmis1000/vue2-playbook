@@ -76,17 +76,6 @@ export default {
       first: null
     }
   },
-  computed: {
-    mappedLines() {
-      return this.lines.map(item => {
-        return {
-          ...item,
-          first: {...(this.items.find(i => i.id === item.first) || { x: 0, y: 0})},
-          second: {...(this.items.find(i => i.id === item.second) || { x: 0, y: 0})}
-        }
-      })
-    }
-  },
   methods: {
     newId () {
       return Math.random().toString(16).slice(2)
