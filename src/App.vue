@@ -10,6 +10,7 @@
       <router-link to="/drag">Draggable</router-link>
       <router-link to="/graph">Graph</router-link>
       <router-link to="/uml">Graph2</router-link>
+      <router-link to="/uml2">Graph3</router-link>
       <router-link to="/clock">Clock</router-link>
       <router-link to="/sync-v-model-example">Sync and v-model example</router-link>
     </div>
