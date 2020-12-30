@@ -75,7 +75,7 @@ export default {
 <style lang="scss" scoped>
 
 @import url('https://fonts.googleapis.com/css?family=Major+Mono+Display&display=swap');
-/deep/ {
+::v-deep * {
   font-family: 'Major Mono Display', monospace;
 }
 
@@ -105,7 +105,7 @@ export default {
     font-size: 0.833em;
   }
 
-  /deep/ .digit {
+  ::v-deep .digit {
     font-size: 1em;
   }
 }

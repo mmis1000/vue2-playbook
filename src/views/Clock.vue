@@ -50,12 +50,12 @@ export default {
 }
 
 @media screen and (max-width: 500px) {
-  /deep/ .wrapper {
+  ::v-deep .wrapper {
     font-size: 40px;
   }
 }
 
-/deep/ {
+::v-deep * {
   font-family: 'Major Mono Display', monospace;
 }
 </style>
