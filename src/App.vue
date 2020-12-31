@@ -33,7 +33,7 @@
 export default {
   data () {
     return {
-      showNav: true
+      showNav: window.innerWidth >= 600
     }
   }
 }
