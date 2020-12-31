@@ -8,17 +8,20 @@
       :key="key"
       :item="value"
       :options="options"
+      class="item"
       @add-input="addInput($event)"
     ></Item>
     <UmlLink
       v-for="[key, value] of Object.entries(links)"
       :key="key"
       :link="value"
+      class="link"
     ></UmlLink>
     <Dock
       v-for="[key, value] of Object.entries(docks)"
       :key="key"
       :dock="value"
+      class="dock"
       :selected="first && first.id === key"
       @click="handleDockClick(value)"
     ></Dock>
@@ -196,5 +199,19 @@ export default {
   display: flex;
   justify-content: stretch;
   align-items: stretch;
+  position: relative;
+  overflow: hidden;
+}
+.item {
+  z-index: 1;
+}
+.item.is-pointer-down {
+  z-index: 2;
+}
+.link {
+  z-index: 3;
+}
+.dock {
+  z-index: 4;
 }
 </style>
