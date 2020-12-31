@@ -130,6 +130,7 @@ export default {
       dock.y = 24
       this.$set(this.items, item.id, item)
       this.$set(this.docks, dock.id, dock)
+      this.addInput(item)
     },
     addInput(item) {
       const dock = this.newDock()
@@ -179,6 +180,9 @@ export default {
         this.first = dock
       }
     }
+  },
+  mounted () {
+    this.addItem()
   }
 };
 </script>
