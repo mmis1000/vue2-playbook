@@ -7,9 +7,14 @@
       v-for="[key, value] of Object.entries(items)"
       :key="key"
       :item="value"
+      :options="options"
       @add-input="addInput($event)"
     ></Item>
-    <UmlLink v-for="[key, value] of Object.entries(links)" :key="key" :link="value"></UmlLink>
+    <UmlLink
+      v-for="[key, value] of Object.entries(links)"
+      :key="key"
+      :link="value"
+    ></UmlLink>
     <Dock
       v-for="[key, value] of Object.entries(docks)"
       :key="key"
@@ -33,6 +38,9 @@ export default {
   },
   data() {
     return {
+      options: {
+        containment: '.container'
+      },
       items: {
         /*
         item_id1: {
@@ -83,25 +91,25 @@ export default {
     newDock() {
       const id = this.newId()
       return {
-          id: id,
-          type: 'dock',
-          end: '',
-          value: 0,
-          x: 0,
-          y: 0,
-          owner: null,
-          links: {}
-        }
+        id: id,
+        type: 'dock',
+        end: '',
+        value: 0,
+        x: 0,
+        y: 0,
+        owner: null,
+        links: {}
+      }
     },
     newItem() {
       const id = this.newId()
       return {
-          id,
-          x: 0,
-          y: 0,
-          yOffset: 40,
-          inputs: [],
-          output: null
+        id,
+        x: 0,
+        y: 0,
+        yOffset: 40,
+        inputs: [],
+        output: null
       }
     },
     newLink() {
