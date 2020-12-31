@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <div class="nav" v-if="showNav">
+    <div
+      class="nav "
+      :class="{ closed: !showNav }"
+    >
+      <div class="close" @click="showNav = !showNav">[Close]</div>
       <router-link to="/home">Home</router-link>
       <router-link to="/about">About</router-link>
       <router-link to="/ajax">Ajax test</router-link>
@@ -18,7 +22,7 @@
       <transition name="slide">
         <router-view :key="$route.path"/>
       </transition>
-      <div class="toggle" @click="showNav = !showNav">
+      <div v-if="!showNav" class="toggle" @click="showNav = !showNav">
         <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
       </div>
     </div>
@@ -48,13 +52,6 @@ body {
 <style lang="scss" scoped>
 @import url(https://use.fontawesome.com/releases/v5.8.2/css/all.css);
 
-
-@media screen and (max-width: 450px) {
-  .toggle {
-    display: none;
-  }
-}
-
 #app {
   display: flex;
   justify-content: stretch;
@@ -70,22 +67,33 @@ body {
   padding: 0;
 
   .nav {
-    flex-grow: 0;
-    flex-shrink: 0;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
     white-space: nowrap;
-    overflow-x: auto;
+    background: #444;
+    z-index: 2;
 
+    transition: max-width .4s;
+    overflow-x: hidden;
+    max-width: 300px;
+    &.closed {
+      max-width: 0;
+    }
+
+    div.close {
+      height: 3em;
+      line-height: 3em;
+    }
     a {
       color: #ccc;
-      display: inline-block;
+      display: block;
       padding: 0 1em;
       text-decoration: none !important;
-      height: 2em;
-      line-height: 2em;
-
-      &:not(:last-child) {
-        border-right: 1px solid #ccc;
-      }
+      height: 3em;
+      line-height: 3em;
 
       &.router-link-exact-active {
         color: #36a;
@@ -95,7 +103,23 @@ body {
 
   .main {
     flex-grow: 1;
-    position: relative;
+    .toggle {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 48px;
+      width: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+
+      opacity: 0.2;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
   }
 }
 
@@ -107,38 +131,23 @@ body {
       flex-shrink: 1;
       position: relative;
       overflow: hidden;
-
-      .toggle {
-        position: absolute;
-        left: 0;
-        top: 0;
-        height: 48px;
-        width: 48px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-
-        opacity: 0.2;
-
-        &:hover {
-          opacity: 1;
-        }
-      }
     }
     .nav {
+      position: relative;
       width: 30%;
       max-width: 250px;
       flex-grow: 0;
       flex-shrink: 0;
-      border-right: 1px solid #ccc;
+
+      div.close {
+        text-align: left;
+        padding-left: 1em;
+      }
 
       a {
         display: block;
-        height: 3em;
         text-align: left;
         padding-left: 1em;
-        line-height: 3em;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
