@@ -6,7 +6,7 @@
     :options="options"
   >
     
-    <div class="sub-item">
+    <div class="sub-item output">
       Output: {{ value }}
     </div>
     <div v-for="(input, index) of item.inputs" :key="input.id" class="sub-item">
@@ -16,7 +16,7 @@
         type="number"
         v-model.number="input.value"
       >
-      <div v-else>
+      <div class="input-other" v-else>
         Input: {{ inputs[index] }}
       </div>
     </div>
@@ -75,6 +75,12 @@ export default {
 .sub-item {
   height: 40px;
   line-height: 40px;
+}
+.sub-item.output {
+  user-select: none;
+}
+.sub-item .input-other {
+  user-select: none;
 }
 .sub-item.add {
   display: block;
