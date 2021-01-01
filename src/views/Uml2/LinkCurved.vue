@@ -51,7 +51,7 @@ export default {
       }
 
       const curveSize = xd < 0
-        ? Math.min(CURVESIZE, Math.abs(xd) / 4, Math.abs(yd) / 4)
+        ? Math.min(CURVESIZE, Math.abs(yd) / 4)
         : Math.min(CURVESIZE, Math.abs(xd) / 2, Math.abs(yd) / 2)
 
       let path = ''
