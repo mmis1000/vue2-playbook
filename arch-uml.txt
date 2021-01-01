@@ -6,16 +6,16 @@ digraph hierarchy {
 
     "(core)"->{"/public/index.html" "/src/main.js"}
     "/src/main.js"->{"/src/router.js" "/src/plugins/axios.js" "/src/App.vue"}
-    "/src/router.js"->{"/src/views/Home.vue" "/src/views/Ajax.vue" "/src/views/RAF.vue" "/src/views/RunInterval.vue" "/src/views/Recursive.vue" "/src/views/Drag.vue" "/src/views/Clock.vue" "/src/views/Graph.vue" "/src/views/SyncVModelExample.vue" "/src/views/About.vue" "/src/views/Uml.vue" "/src/views/Uml2.vue" "/src/views/InfiniteTable.vue" "/src/layouts/default.vue"}
+    "/src/router.js"->{"/src/views/Home.vue" "/src/views/Ajax.vue" "/src/views/RAF.vue" "/src/views/RunInterval.vue" "/src/views/Drag.vue" "/src/views/Graph.vue" "/src/views/Clock.vue" "/src/views/SyncVModelExample.vue" "/src/views/Recursive.vue" "/src/views/About.vue" "/src/views/Uml.vue" "/src/views/Uml2.vue" "/src/views/InfiniteTable.vue" "/src/layouts/default.vue"}
     "/src/views/Home.vue"->{"/src/assets/logo.png"}
     "/src/views/Ajax.vue"->{"/src/components/Ajax.vue"}
     "/src/views/RAF.vue"->{"/src/components/RAF.js"}
     "/src/views/RunInterval.vue"->{"/src/components/RunInterval.vue"}
-    "/src/views/Recursive.vue"->{"/src/components/recursive.js"}
-    "/src/views/Drag.vue"->{"/src/components/Drag.vue" "/src/components/RAF.js"}
-    "/src/views/Clock.vue"->{"/src/components/RAF.js" "/src/components/Clock.vue"}
+    "/src/views/Drag.vue"->{"/src/components/RAF.js" "/src/components/Drag.vue"}
     "/src/views/Graph.vue"->{"/src/components/recursive.js" "/src/components/Drag.vue"}
+    "/src/views/Clock.vue"->{"/src/components/RAF.js" "/src/components/Clock.vue"}
     "/src/views/SyncVModelExample.vue"->{"/src/components/InputOutSync.vue"}
+    "/src/views/Recursive.vue"->{"/src/components/recursive.js"}
     "/src/views/Uml.vue"->{"/src/components/Drag.vue"}
     "/src/views/Uml2.vue"->{"/src/views/Uml2/Item.vue" "/src/views/Uml2/Dock.vue" "/src/views/Uml2/Link.vue" "/src/views/Uml2/LinkCurved.vue"}
     "/src/views/InfiniteTable.vue"->{"/src/components/InfiniteTable.vue"}
