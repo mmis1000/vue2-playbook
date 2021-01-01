@@ -57,25 +57,25 @@ export default {
       let path = ''
       if (xd >= 0 && yd >= 0) {
         const xMiddle = (x1 + x2) / 2
-        path += `M ${x1 + xOriginOffset} ${y1 + yOriginOffset} `
-        path += `L ${xMiddle - curveSize + xOriginOffset} ${y1 + yOriginOffset} `
-        path += `Q ${xMiddle + xOriginOffset} ${y1 + yOriginOffset},
-                   ${xMiddle + xOriginOffset} ${y1 + curveSize + yOriginOffset} `
-        path += `L ${xMiddle + xOriginOffset} ${y2 - curveSize + yOriginOffset} `
-        path += `Q ${xMiddle + xOriginOffset} ${y2 + yOriginOffset},
-                   ${xMiddle + curveSize + xOriginOffset} ${y2 + yOriginOffset} `
-        path += `L ${x2 + xOriginOffset} ${y2 + yOriginOffset} `
+        path += `M ${x1                  + xOriginOffset} ${y1             + yOriginOffset} `
+        path += `L ${xMiddle - curveSize + xOriginOffset} ${y1             + yOriginOffset} `
+        path += `Q ${xMiddle             + xOriginOffset} ${y1             + yOriginOffset},
+                   ${xMiddle             + xOriginOffset} ${y1 + curveSize + yOriginOffset} `
+        path += `L ${xMiddle             + xOriginOffset} ${y2 - curveSize + yOriginOffset} `
+        path += `Q ${xMiddle             + xOriginOffset} ${y2             + yOriginOffset},
+                   ${xMiddle + curveSize + xOriginOffset} ${y2             + yOriginOffset} `
+        path += `L ${x2                  + xOriginOffset} ${y2             + yOriginOffset} `
       }
       if (xd >= 0 && yd < 0) {
         const xMiddle = (x1 + x2) / 2
-        path += `M ${x1 + xOriginOffset} ${y1 + yOriginOffset} `
-        path += `L ${xMiddle - curveSize + xOriginOffset} ${y1 + yOriginOffset} `
-        path += `Q ${xMiddle + xOriginOffset} ${y1 + yOriginOffset},
-                   ${xMiddle + xOriginOffset} ${y1 - curveSize + yOriginOffset} `
-        path += `L ${xMiddle + xOriginOffset} ${y2 + curveSize + yOriginOffset} `
-        path += `Q ${xMiddle + xOriginOffset} ${y2 + yOriginOffset},
-                   ${xMiddle + curveSize + xOriginOffset} ${y2 + yOriginOffset} `
-        path += `L ${x2 + xOriginOffset} ${y2 + yOriginOffset} `
+        path += `M ${x1                  + xOriginOffset} ${y1             + yOriginOffset} `
+        path += `L ${xMiddle - curveSize + xOriginOffset} ${y1             + yOriginOffset} `
+        path += `Q ${xMiddle             + xOriginOffset} ${y1             + yOriginOffset},
+                   ${xMiddle             + xOriginOffset} ${y1 - curveSize + yOriginOffset} `
+        path += `L ${xMiddle             + xOriginOffset} ${y2 + curveSize + yOriginOffset} `
+        path += `Q ${xMiddle             + xOriginOffset} ${y2             + yOriginOffset},
+                   ${xMiddle + curveSize + xOriginOffset} ${y2             + yOriginOffset} `
+        path += `L ${x2                  + xOriginOffset} ${y2             + yOriginOffset} `
       }
       if (xd < 0 && yd >= 0) {
         const yMiddle = (y1 + y2) / 2
