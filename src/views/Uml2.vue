@@ -2,6 +2,14 @@
   <div class="container">
     <div>
       <button @click="addItem">Add</button>
+      <label for="curve">
+        <input type="checkbox" id="curve" v-model="curved">
+        Use curve line
+      </label>
+      <label for="grid">
+        <input type="checkbox" id="grid" v-model="grided">
+        Align to grid
+      </label>
     </div>
     <Item
       v-for="[key, value] of Object.entries(items)"
@@ -11,12 +19,22 @@
       class="item"
       @add-input="addInput($event)"
     ></Item>
-    <UmlLink
-      v-for="[key, value] of Object.entries(links)"
-      :key="key"
-      :link="value"
-      class="link"
-    ></UmlLink>
+    <template v-if="!curved">
+      <UmlLink
+        v-for="[key, value] of Object.entries(links)"
+        :key="key"
+        :link="value"
+        class="link"
+      ></UmlLink>
+    </template>
+    <template v-else>
+      <UmlLinkCurved
+        v-for="[key, value] of Object.entries(links)"
+        :key="key + '-c'"
+        :link="value"
+        class="link"
+      ></UmlLinkCurved>
+    </template>
     <Dock
       v-for="[key, value] of Object.entries(docks)"
       :key="key"
@@ -32,18 +50,19 @@
 import Item from "./Uml2/Item";
 import Dock from "./Uml2/Dock";
 import Link from "./Uml2/Link";
+import LinkCurved from "./Uml2/LinkCurved";
 
 export default {
   components: {
     Item,
     Dock,
-    UmlLink: Link
+    UmlLink: Link,
+    UmlLinkCurved: LinkCurved
   },
   data() {
     return {
-      options: {
-        containment: '.container'
-      },
+      curved: true,
+      grided: true,
       items: {
         /*
         item_id1: {
@@ -85,6 +104,20 @@ export default {
       },
       lines: [],
       first: null
+    }
+  },
+  computed: {
+    options () {
+      if (this.grided) {
+        return {
+          grid: [20, 20],
+          containment: '.container'
+        }
+      } else {
+        return {
+          containment: '.container'
+        }
+      }
     }
   },
   methods: {

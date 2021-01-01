@@ -6,7 +6,7 @@
     <line
       v-bind="positions.lineProp"
       style="stroke-width:2"
-      :style="{stroke: 'red'}"
+      :style="{stroke: 'green'}"
     ></line>
   </svg>
 </template>
