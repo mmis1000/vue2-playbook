@@ -79,6 +79,9 @@ export default {
           this.pendingWrite = null
         }
       })
+      dragInst.on('staticClick', (...args) => {
+        this.$emit('staticClick', ...args)
+      })
     }
   },
   mounted () {

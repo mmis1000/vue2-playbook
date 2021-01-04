@@ -6,29 +6,32 @@
     <path
       v-bind="positions.pathProp"
       fill="none"
-      style="stroke-width:2"
-      :style="{stroke: 'green'}"
+      style="stroke-width:2; opacity: 0.8"
+      :style="{stroke: active ? 'green' : 'grey'}"
+    ></path>
+
+    <path
+      v-bind="positions.anglePathProp"
+      fill="none"
+      style="stroke-width:2; opacity: 0.8"
+      :style="{stroke: active ? 'green' : 'grey'}"
     ></path>
   </svg>
 </template>
 <script>
 export default {
-  name: 'Uml2LinkCurved',
+  name: 'Uml3LinkCurved',
   props: {
     link: Object
   },
   computed: {
+    active () {
+      return this.link.input.getValue()
+    },
     positions () {
       const link = this.link
-      const x1 = link.input.x + link.input.owner.x
-      const y1 = link.input.y + link.input.owner.y
-
-
-      const item = link.output.owner
-      let yOffset  = item.inputs.indexOf(link.output) * item.yOffset
-
-      const x2 = link.output.x + link.output.owner.x
-      const y2 = link.output.y + link.output.owner.y + yOffset
+      const { x: x1, y: y1 }  = link.input.getPosition()
+      const { x: x2, y: y2 }  = link.output.getPosition()
 
       const xd = x2 - x1
       const yd = y2 - y1
@@ -134,6 +137,11 @@ export default {
                    ${x2             + xOriginOffset} ${y2                  + yOriginOffset} `
       }
 
+      const anglePath = `M ${x2 - 12 + xOriginOffset} ${y2 - 12 + yOriginOffset} 
+                         L ${x2      + xOriginOffset} ${y2      + yOriginOffset} 
+                         L ${x2 - 12 + xOriginOffset} ${y2 + 12 + yOriginOffset} 
+      `
+
       return {
         style: {
           position: 'absolute',
@@ -147,6 +155,9 @@ export default {
         },
         pathProp: {
           d: path
+        },
+        anglePathProp: {
+          d: anglePath
         }
       }
     }
