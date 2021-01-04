@@ -13,7 +13,7 @@
 </template>
 <script>
 export default {
-  name: 'Uml2Link',
+  name: 'Uml2LinkCurved',
   props: {
     link: Object
   },

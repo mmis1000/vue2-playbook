@@ -106,6 +106,14 @@ export default new Router({
           component: () => import(/* webpackChunkName: "uml2" */ './views/Uml2.vue')
         },
         {
+          path: 'uml3',
+          name: 'uml3',
+          // route level code-splitting
+          // this generates a separate chunk (about.[hash].js) for this route
+          // which is lazy-loaded when the route is visited.
+          component: () => import(/* webpackChunkName: "uml2" */ './views/Uml3.vue')
+        },
+        {
           path: 'infinite-table',
           name: 'infinite-table',
           // route level code-splitting
