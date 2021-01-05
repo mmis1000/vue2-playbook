@@ -7,15 +7,19 @@
     :options="options"
   >
     And
+  <SelectorValue :min="1" v-model="activateTime" text="A"/>
+  <SelectorValue :min="1" v-model="deactivateTime" text="D"/>
   </drag>
 </template>
 <script>
 import Vue from "vue";
 import Drag from "@/components/Drag.vue";
+import SelectorValue from "./SelectorValue";
 export default {
   name: 'Uml3ItemAnd',
   components: {
-    Drag
+    Drag,
+    SelectorValue
   },
   inject: ['timer'],
   props: {
@@ -26,6 +30,8 @@ export default {
     return {
       holdTime: 0,
       prevRead: true,
+      activateTime: 2,
+      deactivateTime: 2
     }
   },
   watch: {
@@ -62,11 +68,9 @@ export default {
         }
 
         if (newValue !== this.item._valueOut) {
-          // 2 tick to enable
-          if (newValue && this.holdTime < 1) {
+          if (newValue && this.holdTime < this.activateTime - 1) {
             return
-          // 2 tick to de-active
-          } else if (!newValue && this.holdTime < 1) {
+          } else if (!newValue && this.holdTime < this.deactivateTime - 1) {
             return
           }
 
