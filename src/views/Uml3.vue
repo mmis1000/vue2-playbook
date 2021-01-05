@@ -58,6 +58,7 @@ import { declaration as itemXorDef } from "./Uml3/ItemXor";
 import { declaration as itemXnorDef } from "./Uml3/ItemXnor";
 import { declaration as itemNotDef } from "./Uml3/ItemNot";
 import { declaration as itemRelayDef } from "./Uml3/ItemRelay";
+import { declaration as itemAndDef } from "./Uml3/ItemAnd";
 import Dock from "./Uml3/Dock";
 import Link from "./Uml3/Link";
 import LinkCurved from "./Uml3/LinkCurved";
@@ -77,6 +78,7 @@ export default {
     ...itemOutputPulseDef.components,
     ...itemNotDef.components,
     ...itemRelayDef.components,
+    ...itemAndDef.components,
     Dock,
     UmlLink: Link,
     UmlLinkCurved: LinkCurved
@@ -102,7 +104,8 @@ export default {
         ...itemXorDef.menu,
         ...itemXnorDef.menu,
         ...itemNotDef.menu,
-        ...itemRelayDef.menu
+        ...itemRelayDef.menu,
+        ...itemAndDef.menu
       ],
       items: {
         /*
