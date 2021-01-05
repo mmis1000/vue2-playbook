@@ -2,6 +2,7 @@
   <svg
     :style="positions.style"
     v-bind="positions.svgProp"
+    class="svg-root"
   >
     <path
       v-bind="positions.pathProp"
@@ -164,5 +165,12 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
+.svg-root {
+  pointer-events: none;
+
+  & * {
+    pointer-events: initial;
+  }
+}
 </style>
