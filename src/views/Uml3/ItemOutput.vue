@@ -7,6 +7,7 @@
     :options="options"
     @staticClick="active = !active"
   >
+    Output
   </drag>
 </template>
 <script>
