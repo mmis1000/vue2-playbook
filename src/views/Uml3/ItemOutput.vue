@@ -24,9 +24,16 @@ export default {
   },
   computed: {
     active: {
+      /**
+       * @returns {boolean}
+       */
       get () {
         return this.item._value
       },
+      /**
+       * @param {boolean} val
+       * @returns {void}
+       */
       set (val) {
         this.item._value = val
       }

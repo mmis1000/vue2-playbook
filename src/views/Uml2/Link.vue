@@ -17,6 +17,9 @@ export default {
     link: Object
   },
   computed: {
+    /**
+     * @returns {Record<string,Record<string,any>>}
+     */
     positions () {
       const link = this.link
       const x1 = link.input.x + link.input.owner.x

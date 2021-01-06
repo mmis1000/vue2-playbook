@@ -60,6 +60,11 @@ export default {
       deep: true
     }
   },
+  computed: {
+    gridPassive () {
+      return this.options.gridPassive || null
+    }
+  },
   methods: {
     init(dragInst, left, top) {
       dragInst.setPosition(left, top)
@@ -77,6 +82,15 @@ export default {
         if (this.pendingWrite) {
           this.drag.setPosition(this.pendingWrite.x, this.pendingWrite.y)
           this.pendingWrite = null
+        }
+
+        if (this.gridPassive) {
+          const [xd, yd] = this.gridPassive
+          const newX = Math.round(this.drag.position.x / xd) * xd
+          const newY = Math.round(this.drag.position.y / yd) * yd
+          this.drag.setPosition(newX, newY)
+          this.$emit('update:left', newX)
+          this.$emit('update:top', newY)
         }
       })
       dragInst.on('staticClick', (...args) => {

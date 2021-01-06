@@ -22,11 +22,14 @@ export default {
     options: Object
   },
   computed: {
+    /**
+     * @returns {boolean}
+     */
     active () {
-      let sum = 0
+      let sum = false
 
       for (let input of this.item.inputs) {
-        sum += input.getValue()
+        sum = sum || input.getValue()
       }
 
       return sum

@@ -12,6 +12,7 @@
     "debounce": "^1.2.0",
     "draggabilly": "^2.3.0",
     "enhanced-resolve": "^4.3.0",
+    "midicube": "^0.6.1",
     "sass": "^1.32.0",
     "sass-loader": "^10.1.0",
     "vue": "^2.6.12",

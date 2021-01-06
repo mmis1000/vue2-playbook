@@ -15,6 +15,9 @@ export default {
     selected: Boolean
   },
   computed: {
+    /**
+     * @returns {Record<string, any>}
+     */
     style () {
       const item = this.dock.owner
       let yOffset = 0

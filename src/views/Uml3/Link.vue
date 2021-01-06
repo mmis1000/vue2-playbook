@@ -17,9 +17,15 @@ export default {
     link: Object
   },
   computed: {
+    /**
+     * @returns {boolean}
+     */
     active () {
       return this.link.input.getValue()
     },
+    /**
+     * @returns {Record<string,Record<string,any>>}
+     */
     positions () {
       const link = this.link
       const { x: x1, y: y1 }  = link.input.getPosition()

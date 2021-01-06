@@ -41,6 +41,9 @@ export default {
   },
   computed: {
     active: {
+      /**
+       * @returns {boolean}
+       */
       get () {
         return this.item._valueOut
       }

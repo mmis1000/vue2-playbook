@@ -59,6 +59,7 @@ import { declaration as itemXnorDef } from "./Uml3/ItemXnor";
 import { declaration as itemNotDef } from "./Uml3/ItemNot";
 import { declaration as itemRelayDef } from "./Uml3/ItemRelay";
 import { declaration as itemAndDef } from "./Uml3/ItemAnd";
+import { declaration as itemSoundDef } from "./Uml3/ItemSound";
 import Dock from "./Uml3/Dock";
 import Link from "./Uml3/Link";
 import LinkCurved from "./Uml3/LinkCurved";
@@ -79,10 +80,14 @@ export default {
     ...itemNotDef.components,
     ...itemRelayDef.components,
     ...itemAndDef.components,
+    ...itemSoundDef.components,
     Dock,
     UmlLink: Link,
     UmlLinkCurved: LinkCurved
   },
+  /**
+   * @returns {{ timer: {state: string}}}
+   */
   provide () {
     return {
       timer: this.timer
@@ -105,8 +110,10 @@ export default {
         ...itemXnorDef.menu,
         ...itemNotDef.menu,
         ...itemRelayDef.menu,
-        ...itemAndDef.menu
+        ...itemAndDef.menu,
+        ...itemSoundDef.menu
       ],
+      /** @type {Record<string,any>} */
       items: {
         /*
         {
@@ -119,6 +126,7 @@ export default {
         }
          */
       },
+      /** @type {Record<string,any>} */
       docks: {
         /*
         dock_id1: {
@@ -133,6 +141,7 @@ export default {
         }
         */
       },
+      /** @type {Record<string,any>} */
       links: {
         /*
         link_id1: {
@@ -142,15 +151,18 @@ export default {
         }
         */
       },
-      lines: [],
+      /** @type {any} */
       first: null
     }
   },
   computed: {
+    /**
+     * @return {Record<string,any>}
+     */
     options () {
       if (this.grided) {
         return {
-          grid: [20, 20],
+          gridPassive: [20, 20],
           containment: '.container'
         }
       } else {

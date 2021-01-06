@@ -34,7 +34,6 @@
 </template>
 
 <script>
-/// @ts-check
 /* eslint-disable no-unused-vars */
 
 /**

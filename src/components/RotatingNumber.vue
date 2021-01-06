@@ -24,18 +24,33 @@ export default {
     }
   },
   computed: {
+    /**
+     * @returns {number}
+     */
     current () {
       return Math.floor(this.value)
     },
+    /**
+     * @returns {number}
+     */
     next () {
       return Math.floor(this.value) + 1
     },
+    /**
+     * @returns {number}
+     */
     currentChar () {
       return ((this.current % this.base) + this.base) % this.base
     },
+    /**
+     * @returns {number}
+     */
     nextChar () {
       return ((this.next % this.base) + this.base) % this.base
     },
+    /**
+     * @returns {number}
+     */
     percentage () {
       return this.value - this.current
     },

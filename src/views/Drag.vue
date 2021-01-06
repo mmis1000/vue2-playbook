@@ -87,6 +87,7 @@ export default {
     };
   },
   computed: {
+    /** @returns {Record<string, any>} */
     options() {
       return this.grid ? { grid: [20, 20] } : {};
     }

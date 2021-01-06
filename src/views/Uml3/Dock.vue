@@ -15,6 +15,9 @@ export default {
     selected: Boolean
   },
   computed: {
+    /**
+     * @returns {Record<string,string>}
+     */
     style () {
       const positions = this.dock.getPosition()
 

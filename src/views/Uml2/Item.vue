@@ -38,6 +38,9 @@ export default {
     options: Object
   },
   computed: {
+    /**
+     * @returns {number[]}
+     */
     inputs () {
       const sum = (dock) => {
         if (Object.keys(dock.links).length === 0) {
@@ -57,6 +60,9 @@ export default {
 
       return this.item.inputs.map(sum)
     },
+    /**
+     * @returns {number}
+     */
     value () {
       return this.inputs.reduce(((a, b) => a + b), 0)
     }

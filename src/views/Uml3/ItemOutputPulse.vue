@@ -50,13 +50,15 @@ export default {
     options: Object
   },
   computed: {
+      /**
+       * @returns {boolean}
+       */
     active () {
       return this.item._value || this.buffer
     }
   },
   methods: {
     click (ev) {
-      console.log(ev)
       if (ev.target.matches('.child-selector, .child-selector *')) {
         return
       }

@@ -26,12 +26,15 @@ export default {
     };
   },
   computed: {
+    /** @returns {number} */
     fast () {
       return this.initial + (this.current - this.initial + Math.random() * 16) * 10
     },
+    /** @returns {number} */
     slow () {
       return this.initial + (this.current - this.initial) / 10
     },
+    /** @returns {number} */
     reversed () {
       return this.initial - (this.current - this.initial)
     }

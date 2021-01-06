@@ -103,6 +103,7 @@ export default {
         */
       },
       lines: [],
+      /** @type {any} */
       first: null
     }
   },

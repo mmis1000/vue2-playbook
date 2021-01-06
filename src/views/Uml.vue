@@ -49,12 +49,17 @@ export default {
   },
   data() {
     return {
+      /** @type {any[]} */
       items: [],
+      /** @type {any[]} */
       lines: [],
       first: null
     }
   },
   computed: {
+    /**
+     * @returns {any}
+     */
     mappedLines() {
       return this.lines.map(item => {
         return {

@@ -29,6 +29,9 @@ export default {
     }
   },
   computed: {
+    /**
+     * @returns {number[]}
+     */
     digits () {
       var current = this.currentDigits
       var next = this.nextDigits
@@ -44,9 +47,15 @@ export default {
         }
       })
     },
+    /**
+     * @returns {number[]}
+     */
     currentDigits () {
       return this.computeDigits(this.current)
     },
+    /**
+     * @returns {number[]}
+     */
     nextDigits () {
       return this.computeDigits(this.current + 1000)
     }
