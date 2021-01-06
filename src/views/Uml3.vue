@@ -1,18 +1,18 @@
 <template>
-  <div class="container">
+  <div class="container" ref="container">
     <div v-for="item in menu" :key="item.component">
-      <button @click="addItem(item)">{{ item.name }}</button>
+      <button class="add-button" @click="addItem(item)">{{ item.name }}</button>
     </div>
     <div>
-      <label for="curve">
+      <label for="curve" class="option">
         <input type="checkbox" id="curve" v-model="curved">
         Use curve line
       </label>
     </div>
     <div>
-      <label for="grid">
+      <label for="grid" class="option">
         <input type="checkbox" id="grid" v-model="grided">
-        Align to grid
+        Snap to grid
       </label>
     </div>
     <component
@@ -47,6 +47,14 @@
       :selected="first && first.id === key"
       @click="handleDockClick(value)"
     ></Dock>
+    <PanelControl
+      ref="panelControl"
+      class='panel'
+      :options="fullPanelOptions"
+      :panelConfig="fullPanelConfig"
+      :selected="targetPanelSelected"
+      :position="panelPosition.config"
+    />
   </div>
 </template>
 
@@ -63,6 +71,7 @@ import { declaration as itemSoundDef } from "./Uml3/ItemSound";
 import Dock from "./Uml3/Dock";
 import Link from "./Uml3/Link";
 import LinkCurved from "./Uml3/LinkCurved";
+import PanelControl from "./Uml3/PanelControl";
 
 /**
  * @typedef {Object} Timer
@@ -83,19 +92,43 @@ export default {
     ...itemSoundDef.components,
     Dock,
     UmlLink: Link,
-    UmlLinkCurved: LinkCurved
+    UmlLinkCurved: LinkCurved,
+    PanelControl
   },
   /**
-   * @returns {{ timer: {state: string}}}
+   * @returns {{
+   *   timer: {state: string}
+   *   setTargetOptionsAndConfig (options: any, config: any, title?: string): void
+   * }}
    */
   provide () {
     return {
-      timer: this.timer
+      timer: this.timer,
+      setTargetOptionsAndConfig: (options, config, title = '') => {
+        this.targetPanelOptions = options
+        this.targetPanelConfig = config
+        this.targetPanelSelected = title
+      }
     }
   },
   data() {
     return {
+      panelPosition: {
+        config: {
+          x: 0,
+          y: 0
+        }
+      },
       timeoutId: null,
+      childPanelOptions: {
+        ...itemSoundDef.options
+      },
+      childPanelConfig: [
+        ...itemSoundDef.optionsPanel
+      ],
+      targetPanelOptions: {},
+      targetPanelConfig: [],
+      targetPanelSelected: '',
       timer: {
         state: 'read',
         ops: 0
@@ -103,15 +136,15 @@ export default {
       curved: true,
       grided: true,
       menu: [
-        ...itemInputDef.menu,
         ...itemOutputDef.menu,
         ...itemOutputPulseDef.menu,
-        ...itemXorDef.menu,
-        ...itemXnorDef.menu,
-        ...itemNotDef.menu,
+        ...itemInputDef.menu,
+        ...itemSoundDef.menu,
         ...itemRelayDef.menu,
+        ...itemNotDef.menu,
         ...itemAndDef.menu,
-        ...itemSoundDef.menu
+        ...itemXorDef.menu,
+        ...itemXnorDef.menu
       ],
       /** @type {Record<string,any>} */
       items: {
@@ -157,6 +190,27 @@ export default {
   },
   computed: {
     /**
+     * @returns {any}
+     */
+    fullPanelOptions () {
+      return {
+        ...this.childPanelOptions,
+        ...this.targetPanelOptions,
+      }
+    },
+    /**
+     * @returns {any}
+     */
+    fullPanelConfig () {
+      return [
+        ...this.targetPanelConfig,
+        ...this.childPanelConfig.map(i => ({
+          ...i,
+          title: i.title + ' (Global)'
+        }))
+      ]
+    },
+    /**
      * @return {Record<string,any>}
      */
     options () {
@@ -189,6 +243,18 @@ export default {
       this.$set(this.items, item.id, item)
       for (const dock of docks) {
         this.$set(this.docks, dock.id, dock)
+      }
+
+      /**
+       * @type {HTMLDivElement}
+       */
+      const div = this.$refs.container
+      item.x = div.offsetWidth / 2 - 40
+      item.y = div.offsetHeight / 2 - 40
+
+      if (this.grided) {
+        item.x = item.x - (item.x % 20)
+        item.y = item.y - (item.y % 20)
       }
     },
     handleDockClick (dock) {
@@ -250,6 +316,15 @@ export default {
         this.timer.state = 'read'
       }
     }, 50)
+
+    const containerWidth = this.$refs.container.offsetWidth
+    const containerHeight = this.$refs.container.offsetHeight
+    const panelWidth = this.$refs.panelControl.$el.offsetWidth
+    const panelHeight= this.$refs.panelControl.$el.offsetHeight
+    this.panelPosition.config = {
+      x: (containerWidth - panelWidth) / 2,
+      y: containerHeight - panelHeight - 40
+    }
   },
   beforeDestroy () {
     clearInterval(this.timeoutId)
@@ -257,17 +332,46 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .container {
   background: #333;
   color: white;
   height: 100vh;
-  flex-direction: column;
+  flex-direction: row;
   display: flex;
-  justify-content: stretch;
-  align-items: stretch;
   position: relative;
   overflow: hidden;
+
+
+  align-items: flex-start;
+  align-content: flex-start;
+  justify-content: center;
+  justify-items: flex-start;
+  flex-wrap: wrap;
+
+  .add-button {
+    box-sizing: border-box;
+    height: 40px;
+    margin-right: 4px;
+    margin-top: 4px;
+    min-width: 84px;
+    padding: 4px;
+    border: 0;
+    background: #555;
+    color: white;
+  }
+
+  .option {
+    display: inline-block;
+    box-sizing: border-box;
+    height: 40px;
+    line-height: 32px;
+    background: #555;
+    margin-right: 4px;
+    margin-top: 4px;
+    min-width: 84px;
+    padding: 4px;
+  }
 }
 .item {
   z-index: 1;
@@ -280,5 +384,8 @@ export default {
 }
 .dock {
   z-index: 4;
+}
+.panel {
+  z-index: 5;
 }
 </style>

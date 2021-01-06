@@ -1,7 +1,7 @@
 <template>
   <div class="selector">
     <button class="button" @click.prevent.stop.capture="emit(value - 1)"> - </button>
-    <div class="text"> {{text}}{{ value }}</div>
+    <div class="text handle"> {{text}}{{ value }}</div>
     <button class="button" @click.prevent.stop.capture="emit(value + 1)"> + </button>
   </div>
 </template>
@@ -61,6 +61,7 @@ export default {
 
   .text {
     flex-grow: 1;
+    user-select: none;
   }
 }
 </style>

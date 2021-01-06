@@ -46,6 +46,8 @@ export const registers = {
   height: 20px;
   border: 2px green solid;
   border-radius: 10px;
+  left: 0;
+  top: 0;
 }
 .dock.selected {
   background: pink;

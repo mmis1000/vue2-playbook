@@ -59,7 +59,10 @@ export default {
   },
   methods: {
     click (ev) {
-      if (ev.target.matches('.child-selector, .child-selector *')) {
+      if (
+        ev.target.matches('.child-selector, .child-selector *') &&
+        !ev.target.matches('.handle, .handle *')
+      ) {
         return
       }
       this.hold = 5;

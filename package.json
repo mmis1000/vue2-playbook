@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@types/draggabilly": "^2.1.2",
     "core-js": "^3.6.5",
     "debounce": "^1.2.0",
     "draggabilly": "^2.3.0",

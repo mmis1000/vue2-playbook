@@ -22,12 +22,20 @@ export default {
     }
   },
   data() {
-    return {
+    return (/**
+    * @type {{
+      drag: Draggabilly
+      currentLeft: number
+      currentTop: number
+      dragging: boolean
+      pendingWrite: null | { x: number, y: number }
+    }}
+    */({
       currentLeft: this.left,
       currentTop: this.top,
       dragging: false,
       pendingWrite: null
-    }
+    }))
   },
   watch: {
     left (newX) {
@@ -61,6 +69,9 @@ export default {
     }
   },
   computed: {
+    /**
+     * @returns {[ number, number ]}
+     */
     gridPassive () {
       return this.options.gridPassive || null
     }

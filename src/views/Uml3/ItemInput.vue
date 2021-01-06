@@ -6,7 +6,7 @@
     :top.sync="item.y"
     :options="options"
   >
-    Input
+    Exit
   </drag>
 </template>
 <script>
@@ -77,7 +77,7 @@ const createComponent = () => {
 export const declaration = {
   menu: [
     {
-      name: 'Static input',
+      name: 'Exit',
       component: 'input-item',
       createComponent
     }
