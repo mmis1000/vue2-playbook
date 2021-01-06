@@ -67,7 +67,12 @@ export default {
         const newValue = this.item._valueIn1 === this.item._valueIn2;
 
         if (this.prevRead === newValue) {
-          this.holdTime++;
+          if (
+            this.holdTime <= this.activateTime ||
+            this.holdTime <= this.activateTime
+          ) {
+            this.holdTime++;
+          }
         } else {
           this.prevRead = newValue;
           this.holdTime = 0;

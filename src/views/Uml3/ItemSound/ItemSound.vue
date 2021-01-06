@@ -135,7 +135,6 @@ export default {
   },
   methods: {
     click() {
-      console.log(this.item.id);
       this.setTargetOptionsAndConfig(
         {
           currentOption: this.item,
