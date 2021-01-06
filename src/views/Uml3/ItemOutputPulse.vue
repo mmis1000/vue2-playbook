@@ -1,6 +1,6 @@
 <template>
   <drag
-    class="item "
+    class="item"
     :class="{ active }"
     :left.sync="item.x"
     :top.sync="item.y"
@@ -8,117 +8,123 @@
     @staticClick="click"
   >
     Pulse
-    <SelectorValue class="child-selector" :min="1" v-model="persistTime" text="L"/>
+    <SelectorValue
+      class="child-selector"
+      :min="1"
+      v-model="persistTime"
+      text="L"
+    />
   </drag>
 </template>
 <script>
 import Vue from "vue";
 import Drag from "@/components/Drag.vue";
 import SelectorValue from "./SelectorValue";
+import { createComputed } from "./utils.js";
+
 export default {
-  name: 'Uml3ItemOutputPulse',
+  name: "Uml3ItemOutputPulse",
   components: {
     Drag,
-    SelectorValue
+    SelectorValue,
   },
-  data () {
-    return {
-      persistTime: 4,
-      buffer: false,
-      hold: 0
-    }
-  },
-  inject: ['timer'],
+  inject: ["timer"],
   watch: {
-    'timer.state' (state) {
-      if (state === 'read') {
+    "timer.state"(state) {
+      if (state === "read") {
         if (this.buffer) {
-          this.buffer = false
-          this.hold = this.persistTime
-          this.item._value = true
+          this.buffer = false;
+          this.hold = this.persistTime;
+          this.item._value = true;
         } else if (this.hold > 0) {
-          this.hold--
+          this.hold--;
           if (this.hold === 0) {
-            this.item._value = false
+            this.item._value = false;
           }
         }
       }
-    }
+    },
   },
   props: {
     item: Object,
-    options: Object
+    options: Object,
   },
   computed: {
-      /**
-       * @returns {boolean}
-       */
-    active () {
-      return this.item._value || this.buffer
-    }
+    /**
+     * @returns {boolean}
+     */
+    active() {
+      return this.item._value || this.buffer;
+    },
+    ...createComputed("persistTime"),
+    ...createComputed("buffer"),
+    ...createComputed("hold"),
   },
   methods: {
-    click (ev) {
+    click(ev) {
       if (
-        ev.target.matches('.child-selector, .child-selector *') &&
-        !ev.target.matches('.handle, .handle *')
+        ev.target.matches(".child-selector, .child-selector *") &&
+        !ev.target.matches(".handle, .handle *")
       ) {
-        return
+        return;
       }
       this.hold = 5;
-      this.buffer = true
-    }
-  }
-}
+      this.buffer = true;
+    },
+  },
+};
 
 const createComponent = () => {
   const dock = Vue.observable({
     id: Math.random().toString(16).slice(2),
-    type: 'output',
+    type: "output",
     getValue() {
-      return this.owner._value
+      return this.owner._value;
     },
-    getPosition () {
+    getPosition() {
       return {
         x: this.owner.x + 80,
-        y: this.owner.y + 40
-      }
+        y: this.owner.y + 40,
+      };
     },
     owner: null,
-    links: []
-  })
+    links: [],
+  });
 
   const item = Vue.observable({
     id: Math.random().toString(16).slice(2),
-    renderType: 'output-pulse-item',
+    renderType: "output-pulse-item",
     _value: false,
+    _persistTime: 4,
+    _buffer: false,
+    _hold: 0,
     x: 0,
     y: 0,
     inputs: [],
-    outputs: []
-  })
+    outputs: [],
+  });
 
-  item.outputs.push(dock)
-  dock.owner = item
+  item.outputs.push(dock);
+  dock.owner = item;
 
   return {
     item,
-    docks: [dock]
-  }
-}
+    docks: [dock],
+  };
+};
 
 export const declaration = {
   menu: [
     {
-      name: 'Pulse output',
-      component: 'output-pulse-item',
-      createComponent
-    }
+      name: "Pulse output",
+      component: "output-pulse-item",
+      createComponent,
+    },
   ],
   components: {
-    'output-pulse-item': () => import(__filename).then(it => it.default)
-  }
-}
+    "output-pulse-item": () => import(__filename).then((it) => it.default),
+  },
+};
 </script>
 <style lang="scss" scoped>
 .item {

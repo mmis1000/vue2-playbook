@@ -4,38 +4,37 @@
     :class="{ selected }"
     :style="style"
     v-on="$listeners"
-  >
-  </div>
+  ></div>
 </template>
 <script>
 export default {
-  name: 'Uml3Dock',
+  name: "Uml3Dock",
   props: {
     dock: Object,
-    selected: Boolean
+    selected: Boolean,
   },
   computed: {
     /**
      * @returns {Record<string,string>}
      */
-    style () {
-      const positions = this.dock.getPosition()
+    style() {
+      const positions = this.dock.getPosition();
 
-      const left = positions.x - 10 + 'px'
-      const top =  positions.y - 10 + 'px'
+      const left = positions.x - 10 + "px";
+      const top = positions.y - 10 + "px";
 
       return {
-        'transform': `translate(${left}, ${top})`
-      }
-    }
-  }
-}
+        transform: `translate(${left}, ${top})`,
+      };
+    },
+  },
+};
 
 export const registers = {
   components: {
-    'default-dock': () => import(__filename).then(it => it.default)
-  }
-}
+    "default-dock": () => import(__filename).then((it) => it.default),
+  },
+};
 </script>
 <style lang="scss" scoped>
 .dock {

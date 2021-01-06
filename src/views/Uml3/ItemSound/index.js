@@ -31,6 +31,7 @@ const createComponent = () => {
     _channel: 0,
     _note: 60,
     _velocity: 64,
+    _prevState: false,
     inputs: [],
     outputs: []
   })

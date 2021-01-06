@@ -1,6 +1,6 @@
 <template>
   <drag
-    class="item "
+    class="item"
     :class="{ active }"
     :left.sync="item.x"
     :top.sync="item.y"
@@ -13,79 +13,81 @@
 import Vue from "vue";
 import Drag from "@/components/Drag.vue";
 export default {
-  name: 'Uml3ItemInput',
+  name: "Uml3ItemInput",
   components: {
-    Drag
+    Drag,
   },
   props: {
     item: Object,
-    options: Object
+    options: Object,
   },
   computed: {
     /**
      * @returns {boolean}
      */
-    active () {
-      let sum = false
+    active() {
+      let sum = false;
 
       for (let input of this.item.inputs) {
-        sum = sum || input.getValue()
+        sum = sum || input.getValue();
       }
 
-      return sum
-    }
-  }
-}
+      return sum;
+    },
+  },
+};
 
 const createComponent = () => {
   const dock = Vue.observable({
     id: Math.random().toString(16).slice(2),
-    type: 'input',
+    type: "input",
     getValue() {
-      return this.links.map(link => {
-        return link.input.getValue()
-      }).reduce((x, y) => x || y, false)
+      return this.links
+        .map((link) => {
+          return link.input.getValue();
+        })
+        .reduce((x, y) => x || y, false);
     },
-    getPosition () {
+    getPosition() {
       return {
         x: this.owner.x,
-        y: this.owner.y + 40
-      }
+        y: this.owner.y + 40,
+      };
     },
     owner: null,
-    links: []
-  })
+    links: [],
+  });
 
   const item = Vue.observable({
     id: Math.random().toString(16).slice(2),
-    renderType: 'input-item',
+    renderType: "input-item",
     x: 0,
     y: 0,
     inputs: [],
-    outputs: []
-  })
+    outputs: [],
+  });
 
-  item.inputs.push(dock)
-  dock.owner = item
+  item.inputs.push(dock);
+  dock.owner = item;
 
   return {
     item,
-    docks: [dock]
-  }
-}
+    docks: [dock],
+  };
+};
 
 export const declaration = {
   menu: [
     {
-      name: 'Exit',
-      component: 'input-item',
-      createComponent
-    }
+      name: "Exit",
+      component: "input-item",
+      createComponent,
+    },
   ],
   components: {
-    'input-item': () => import(__filename).then(it => it.default)
-  }
-}
+    "input-item": () => import(__filename).then((it) => it.default),
+  },
+};
 </script>
 <style lang="scss" scoped>
 .item {

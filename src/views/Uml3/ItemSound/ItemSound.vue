@@ -7,13 +7,11 @@
     :options="options"
     @staticClick="click"
   >
-    <template v-if="loadState.loading">
-      Loading Sounds
-    </template>
+    <template v-if="loadState.loading"> Loading Sounds </template>
     <template v-else>
-      Sound<br>
-      {{ item._channel + 1 }}/{{ NOTE_TO_KEY[item._note] }}<br>
-      V{{this.item._velocity}}
+      Sound<br />
+      {{ item._channel + 1 }}/{{ NOTE_TO_KEY[item._note] }}<br />
+      V{{ this.item._velocity }}
     </template>
   </drag>
 </template>
@@ -21,55 +19,62 @@
 import Vue from "vue";
 import Drag from "@/components/Drag.vue";
 import * as MIDI from "midicube";
-import { options } from "./index.js"
+import { options } from "./index.js";
+import { createComputed } from "../utils.js";
 
 window.MIDI = MIDI; // Register to global first
 
-export const KET_NODE_MAP_OPTIONS = Object.entries(MIDI.keyToNote).map(it => ({
-  name: it[0],
-  value: it[1]
-})).sort((a, b) => a.value - b.value)
-export const NOTE_TO_KEY = Object
-  .entries(MIDI.keyToNote)
-  .reduce(
-    (o, c) => {
-      o[c[1]] = c[0]
-      return o
-    }, 
-    /** @type {Record<number, string>} */({})
-  )
+export const KET_NODE_MAP_OPTIONS = Object.entries(MIDI.keyToNote)
+  .map((it) => ({
+    name: it[0],
+    value: it[1],
+  }))
+  .sort((a, b) => a.value - b.value);
+export const NOTE_TO_KEY = Object.entries(MIDI.keyToNote).reduce((o, c) => {
+  o[c[1]] = c[0];
+  return o;
+}, /** @type {Record<number, string>} */ ({}));
 
 const state = Vue.observable({
-  loading: true
-})
+  loading: true,
+});
 
 {
   const loadPrograms = () => {
-    state.loading = true
+    state.loading = true;
     MIDI.loadPlugin({
       // this only has piano.
       // for other sounds install the MIDI.js
       // soundfonts somewhere.
-      instruments: [...new Set(options["sound-item"].channels.map(i => i.program.id))], // or the instrument code 1 (aka the default)
+      instruments: [
+        ...new Set(options["sound-item"].channels.map((i) => i.program.id)),
+      ], // or the instrument code 1 (aka the default)
       soundfontUrl: "https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/",
       onerror: console.warn,
       onsuccess: () => {
-        for (const [index, channel] of options["sound-item"].channels.entries()) {
-          MIDI.programChange(index, channel.program.program)
+        for (const [index, channel] of options[
+          "sound-item"
+        ].channels.entries()) {
+          MIDI.programChange(index, channel.program.program);
         }
-        state.loading = false
+        state.loading = false;
       },
     });
-  }
+  };
 
-  loadPrograms()
+  loadPrograms();
 
-  const inst = new Vue({})
-  inst.$watch(() => {
-    return options['sound-item'].channels.map(it => it.program.id).join('|')
-  }, () => {
-    loadPrograms()
-  })
+  const inst = new Vue({});
+  inst.$watch(
+    () => {
+      return options["sound-item"].channels
+        .map((it) => it.program.id)
+        .join("|");
+    },
+    () => {
+      loadPrograms();
+    }
+  );
 }
 
 export default {
@@ -83,9 +88,8 @@ export default {
   },
   data() {
     return {
-      prevState: false,
       loadState: state,
-      NOTE_TO_KEY
+      NOTE_TO_KEY,
     };
   },
   inject: ["timer", "setTargetOptionsAndConfig"],
@@ -94,14 +98,15 @@ export default {
      * @returns {boolean}
      */
     active() {
-      let sum = false
+      let sum = false;
 
       for (let input of this.item.inputs) {
-        sum = sum || input.getValue()
+        sum = sum || input.getValue();
       }
 
-      return sum
+      return sum;
     },
+    ...createComputed("prevState"),
   },
   watch: {
     "timer.state"(state) {
@@ -114,7 +119,11 @@ export default {
         if (this.prevState !== this.item._value) {
           if (this.item._value) {
             if (!this.loadState.loading) {
-              MIDI.noteOn(this.item._channel, this.item._note, this.item._velocity);
+              MIDI.noteOn(
+                this.item._channel,
+                this.item._note,
+                this.item._velocity
+              );
             }
           } else {
             MIDI.noteOff(this.item._channel, this.item._note);
@@ -125,45 +134,45 @@ export default {
     },
   },
   methods: {
-    click () {
-      console.log(this.item.id)
+    click() {
+      console.log(this.item.id);
       this.setTargetOptionsAndConfig(
         {
-          currentOption: this.item
+          currentOption: this.item,
         },
         [
           {
-            title: 'Note block',
+            title: "Note block",
             items: [
               {
-                name: 'Channel',
-                type: 'select',
+                name: "Channel",
+                type: "select",
                 options: new Array(16).fill(null).map((_, i) => ({
                   name: String(i + 1),
-                  value: i
+                  value: i,
                 })),
-                path: ['currentOption', '_channel']
+                path: ["currentOption", "_channel"],
               },
               {
-                name: 'Note',
-                type: 'select',
+                name: "Note",
+                type: "select",
                 options: KET_NODE_MAP_OPTIONS,
-                path: ['currentOption', '_note']
+                path: ["currentOption", "_note"],
               },
               {
-                name: 'Velocity',
-                type: 'number',
+                name: "Velocity",
+                type: "number",
                 min: 0,
-                path: ['currentOption', '_velocity']
-              }
-            ]
-          }
+                path: ["currentOption", "_velocity"],
+              },
+            ],
+          },
         ],
-        'Note block',
+        "Note block",
         this.item.id
-      )
-    }
-  }
+      );
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

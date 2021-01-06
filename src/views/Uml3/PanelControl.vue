@@ -7,8 +7,8 @@
     @staticClick="open = !open"
   >
     <div class="title handle">
-      Config {{ selected ? '(+' + selected +')' : '' }}
-      {{ open ? '[open]' : '[close]' }}
+      Config {{ selected ? "(+" + selected + ")" : "" }}
+      {{ open ? "[open]" : "[close]" }}
     </div>
     <div class="wrapper" :class="{ hide: !open }">
       <div class="panel" v-for="(panel, index1) in mappedPanels" :key="index1">
@@ -17,13 +17,18 @@
           <template v-if="item.type === 'select'">
             <label :for="'panel' + index1 + '-' + index2">
               {{ item.name }}
-              <select v-model="item.value" :name="'panel' + index1 + '-' + index2">
+              <select
+                v-model="item.value"
+                :name="'panel' + index1 + '-' + index2"
+              >
                 <!-- inline object literal -->
                 <option
                   v-for="(option, index) in item.options"
                   :key="index"
                   :value="option.value"
-                >{{option.name}}</option>
+                >
+                  {{ option.name }}
+                </option>
               </select>
             </label>
           </template>
@@ -35,7 +40,7 @@
                 :min="item.min"
                 :max="item.max"
                 v-model.number="item.value"
-              >
+              />
             </label>
           </template>
         </div>
@@ -45,49 +50,48 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import Vue from "vue";
 import Drag from "@/components/Drag.vue";
 
 const getValue = (obj, path) => {
-  let current = obj
+  let current = obj;
 
   for (let seg of path) {
-    current = current[seg]
+    current = current[seg];
   }
 
-  return current
-}
+  return current;
+};
 
 const setValue = (obj, path, value) => {
-  let current = obj
+  let current = obj;
 
   for (let seg of path.slice(0, -1)) {
-    current = current[seg]
+    current = current[seg];
   }
 
-  Vue.set(current, path[path.length - 1], value)
+  Vue.set(current, path[path.length - 1], value);
   // current[path[path.length - 1]] = value
-}
+};
 
 export default {
   components: {
-    Drag
+    Drag,
   },
   props: {
     options: Object,
     panelConfig: Array,
     selected: {
       type: String,
-      default: ''
+      default: "",
     },
-    position: Object
+    position: Object,
   },
-  data () {
+  data() {
     return {
       open: false,
-      dragOptions: {
-      }
-    }
+      dragOptions: {},
+    };
   },
   computed: {
     /**
@@ -107,50 +111,50 @@ export default {
      *   })[]
      * }[]}
      */
-    mappedPanels () {
-      const self = this
-      return this.panelConfig.map(panel => {
+    mappedPanels() {
+      const self = this;
+      return this.panelConfig.map((panel) => {
         return {
           title: panel.title,
-          items: panel.items.map(item => {
+          items: panel.items.map((item) => {
             switch (item.type) {
               case "select":
                 return {
                   name: item.name,
-                  type: 'select',
+                  type: "select",
                   options: item.options,
                   get value() {
-                    return getValue(self.options, item.path)
+                    return getValue(self.options, item.path);
                   },
                   set value(newVal) {
-                    setValue(self.options, item.path, newVal)
-                    return true
-                  }
-                }
+                    setValue(self.options, item.path, newVal);
+                    return true;
+                  },
+                };
               case "number":
                 return {
                   name: item.name,
-                  type: 'number',
-                  min: item.min ?? '',
-                  max: item.max ?? '',
+                  type: "number",
+                  min: item.min ?? "",
+                  max: item.max ?? "",
                   get value() {
-                    return getValue(self.options, item.path)
+                    return getValue(self.options, item.path);
                   },
                   set value(newVal) {
-                    setValue(self.options, item.path, newVal)
-                    return true
-                  }
-                }
+                    setValue(self.options, item.path, newVal);
+                    return true;
+                  },
+                };
               default:
-                console.error(item)
-                throw new Error("wtf")
+                console.error(item);
+                throw new Error("wtf");
             }
-          })
-        }
-      })
-    }
-  }
-}
+          }),
+        };
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

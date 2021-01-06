@@ -1,6 +1,6 @@
 <template>
   <drag
-    class="item "
+    class="item"
     :class="{ active }"
     :left.sync="item.x"
     :top.sync="item.y"
@@ -14,81 +14,81 @@
 import Vue from "vue";
 import Drag from "@/components/Drag.vue";
 export default {
-  name: 'Uml3ItemOutput',
+  name: "Uml3ItemOutput",
   components: {
-    Drag
+    Drag,
   },
   props: {
     item: Object,
-    options: Object
+    options: Object,
   },
   computed: {
     active: {
       /**
        * @returns {boolean}
        */
-      get () {
-        return this.item._value
+      get() {
+        return this.item._value;
       },
       /**
        * @param {boolean} val
        * @returns {void}
        */
-      set (val) {
-        this.item._value = val
-      }
-    }
-  }
-}
+      set(val) {
+        this.item._value = val;
+      },
+    },
+  },
+};
 
 const createComponent = () => {
   const dock = Vue.observable({
     id: Math.random().toString(16).slice(2),
-    type: 'output',
+    type: "output",
     getValue() {
-      return this.owner._value
+      return this.owner._value;
     },
-    getPosition () {
+    getPosition() {
       return {
         x: this.owner.x + 80,
-        y: this.owner.y + 40
-      }
+        y: this.owner.y + 40,
+      };
     },
     owner: null,
-    links: []
-  })
+    links: [],
+  });
 
   const item = Vue.observable({
     id: Math.random().toString(16).slice(2),
-    renderType: 'output-item',
+    renderType: "output-item",
     _value: false,
     x: 0,
     y: 0,
     inputs: [],
-    outputs: []
-  })
+    outputs: [],
+  });
 
-  item.outputs.push(dock)
-  dock.owner = item
+  item.outputs.push(dock);
+  dock.owner = item;
 
   return {
     item,
-    docks: [dock]
-  }
-}
+    docks: [dock],
+  };
+};
 
 export const declaration = {
   menu: [
     {
-      name: 'Static output',
-      component: 'output-item',
-      createComponent
-    }
+      name: "Static output",
+      component: "output-item",
+      createComponent,
+    },
   ],
   components: {
-    'output-item': () => import(__filename).then(it => it.default)
-  }
-}
+    "output-item": () => import(__filename).then((it) => it.default),
+  },
+};
 </script>
 <style lang="scss" scoped>
 .item {

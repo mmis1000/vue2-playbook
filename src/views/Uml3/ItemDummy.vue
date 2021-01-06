@@ -1,25 +1,20 @@
 <template>
-  <drag
-    class="item "
-    :left.sync="item.x"
-    :top.sync="item.y"
-    :options="options"
-  >
+  <drag class="item" :left.sync="item.x" :top.sync="item.y" :options="options">
     Loading...
   </drag>
 </template>
 <script>
 import Drag from "@/components/Drag.vue";
 export default {
-  name: 'Uml3ItemDummy',
+  name: "Uml3ItemDummy",
   components: {
-    Drag
+    Drag,
   },
   props: {
     item: Object,
-    options: Object
-  }
-}
+    options: Object,
+  },
+};
 </script>
 <style lang="scss" scoped>
 .item {

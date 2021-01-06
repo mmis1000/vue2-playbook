@@ -1,48 +1,52 @@
 <template>
   <div class="selector">
-    <button class="button" @click.prevent.stop.capture="emit(value - 1)"> - </button>
-    <div class="text handle"> {{text}}{{ value }}</div>
-    <button class="button" @click.prevent.stop.capture="emit(value + 1)"> + </button>
+    <button class="button" @click.prevent.stop.capture="emit(value - 1)">
+      -
+    </button>
+    <div class="text handle">{{ text }}{{ value }}</div>
+    <button class="button" @click.prevent.stop.capture="emit(value + 1)">
+      +
+    </button>
   </div>
 </template>
 <script>
 export default {
-  name: 'Uml3SelectorValue',
+  name: "Uml3SelectorValue",
   props: {
     value: {
-      type: Number
+      type: Number,
     },
     text: {
       type: String,
-      default: ''
+      default: "",
     },
     min: {
       type: Number,
-      default: -Infinity
+      default: -Infinity,
     },
     max: {
       type: Number,
-      default: Infinity
-    }
+      default: Infinity,
+    },
   },
   methods: {
-    emit (value) {
+    emit(value) {
       if (isNaN(value)) {
-        return
+        return;
       }
 
       if (value < this.min) {
-        return
+        return;
       }
 
       if (value > this.max) {
-        return
+        return;
       }
 
-      this.$emit('input', value)
-    }
-  }
-}
+      this.$emit("input", value);
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 .selector {
