@@ -21,7 +21,8 @@
       :key="key"
       :item="value"
       :options="options"
-      class="item"
+      class="item "
+      :class="{ target: targetId === value.id }"
     ></component>
     <template v-if="!curved">
       <UmlLink
@@ -55,6 +56,7 @@
       :selected="targetPanelSelected"
       :position="panelPosition.config"
     />
+    <RunInterval :interval="childPanelOptions.global.timerInterval / 2" @tick="onTick"/>
   </div>
 </template>
 
@@ -72,6 +74,7 @@ import Dock from "./Uml3/Dock";
 import Link from "./Uml3/Link";
 import LinkCurved from "./Uml3/LinkCurved";
 import PanelControl from "./Uml3/PanelControl";
+import RunInterval from '@/components/RunInterval.vue'
 
 /**
  * @typedef {Object} Timer
@@ -93,21 +96,23 @@ export default {
     Dock,
     UmlLink: Link,
     UmlLinkCurved: LinkCurved,
-    PanelControl
+    PanelControl,
+    RunInterval
   },
   /**
    * @returns {{
    *   timer: {state: string}
-   *   setTargetOptionsAndConfig (options: any, config: any, title?: string): void
+   *   setTargetOptionsAndConfig (options: any, config: any, title?: string, id?: string): void
    * }}
    */
   provide () {
     return {
       timer: this.timer,
-      setTargetOptionsAndConfig: (options, config, title = '') => {
+      setTargetOptionsAndConfig: (options, config, title = '', id = null) => {
         this.targetPanelOptions = options
         this.targetPanelConfig = config
         this.targetPanelSelected = title
+        this.targetId = id
       }
     }
   },
@@ -121,14 +126,28 @@ export default {
       },
       timeoutId: null,
       childPanelOptions: {
+        global: {
+          timerInterval: 100
+        },
         ...itemSoundDef.options
       },
       childPanelConfig: [
+        {
+          title: 'System',
+          items: [{
+            name: 'Tick interval',
+            type: 'number',
+            min: 20,
+            max: Infinity,
+            path: ['global', 'timerInterval']
+          }]
+        },
         ...itemSoundDef.optionsPanel
       ],
       targetPanelOptions: {},
       targetPanelConfig: [],
       targetPanelSelected: '',
+      targetId: null,
       timer: {
         state: 'read',
         ops: 0
@@ -306,17 +325,16 @@ export default {
       } else {
         this.first = dock
       }
-    }
-  },
-  mounted () {
-    this.timeoutId = setInterval(() => {
+    },
+    onTick () {
       if (this.timer.state === 'read') {
         this.timer.state = 'write'
       } else {
         this.timer.state = 'read'
       }
-    }, 50)
-
+    }
+  },
+  mounted () {
     const containerWidth = this.$refs.container.offsetWidth
     const containerHeight = this.$refs.container.offsetHeight
     const panelWidth = this.$refs.panelControl.$el.offsetWidth
@@ -325,9 +343,6 @@ export default {
       x: (containerWidth - panelWidth) / 2,
       y: containerHeight - panelHeight - 40
     }
-  },
-  beforeDestroy () {
-    clearInterval(this.timeoutId)
   }
 };
 </script>
@@ -375,6 +390,10 @@ export default {
 }
 .item {
   z-index: 1;
+
+  &.target {
+    border-color: blue;
+  }
 }
 .item.is-pointer-down {
   z-index: 2;

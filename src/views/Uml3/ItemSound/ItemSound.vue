@@ -12,7 +12,8 @@
     </template>
     <template v-else>
       Sound<br>
-      {{ item._channel + 1 }}/{{ NOTE_TO_KEY[item._note] }}
+      {{ item._channel + 1 }}/{{ NOTE_TO_KEY[item._note] }}<br>
+      V{{this.item._velocity}}
     </template>
   </drag>
 </template>
@@ -113,7 +114,7 @@ export default {
         if (this.prevState !== this.item._value) {
           if (this.item._value) {
             if (!this.loadState.loading) {
-              MIDI.noteOn(this.item._channel, this.item._note, 64);
+              MIDI.noteOn(this.item._channel, this.item._note, this.item._velocity);
             }
           } else {
             MIDI.noteOff(this.item._channel, this.item._note);
@@ -125,6 +126,7 @@ export default {
   },
   methods: {
     click () {
+      console.log(this.item.id)
       this.setTargetOptionsAndConfig(
         {
           currentOption: this.item
@@ -147,11 +149,18 @@ export default {
                 type: 'select',
                 options: KET_NODE_MAP_OPTIONS,
                 path: ['currentOption', '_note']
+              },
+              {
+                name: 'Velocity',
+                type: 'number',
+                min: 0,
+                path: ['currentOption', '_velocity']
               }
             ]
           }
         ],
-        'Note block'
+        'Note block',
+        this.item.id
       )
     }
   }

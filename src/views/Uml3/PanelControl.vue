@@ -27,6 +27,17 @@
               </select>
             </label>
           </template>
+          <template v-if="item.type === 'number'">
+            <label :for="'panel' + index1 + '-' + index2">
+              {{ item.name }}
+              <input
+                type="number"
+                :min="item.min"
+                :max="item.max"
+                v-model.number="item.value"
+              >
+            </label>
+          </template>
         </div>
       </div>
     </div>
@@ -87,6 +98,12 @@ export default {
      *     type: 'select'
      *     options: { name: string, value: any }[],
      *     value: any
+     *   } | {
+     *     name: string
+     *     type: 'number'
+     *     min?: number
+     *     max?: number
+     *     value: any
      *   })[]
      * }[]}
      */
@@ -102,6 +119,20 @@ export default {
                   name: item.name,
                   type: 'select',
                   options: item.options,
+                  get value() {
+                    return getValue(self.options, item.path)
+                  },
+                  set value(newVal) {
+                    setValue(self.options, item.path, newVal)
+                    return true
+                  }
+                }
+              case "number":
+                return {
+                  name: item.name,
+                  type: 'number',
+                  min: item.min ?? '',
+                  max: item.max ?? '',
                   get value() {
                     return getValue(self.options, item.path)
                   },

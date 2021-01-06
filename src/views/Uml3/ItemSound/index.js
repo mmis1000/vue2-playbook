@@ -30,6 +30,7 @@ const createComponent = () => {
     _value: false,
     _channel: 0,
     _note: 60,
+    _velocity: 64,
     inputs: [],
     outputs: []
   })
