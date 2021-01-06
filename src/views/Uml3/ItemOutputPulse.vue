@@ -68,9 +68,23 @@ export default {
       ) {
         return;
       }
-      this.hold = 5;
       this.buffer = true;
     },
+  },
+};
+
+const prefix = "dock-output-pulse-";
+
+const output = {
+  $type: prefix + "output",
+  getValue() {
+    return this.owner._value;
+  },
+  getPosition() {
+    return {
+      x: this.owner.x + 80,
+      y: this.owner.y + 40,
+    };
   },
 };
 
@@ -78,17 +92,9 @@ const createComponent = () => {
   const dock = Vue.observable({
     id: Math.random().toString(16).slice(2),
     type: "output",
-    getValue() {
-      return this.owner._value;
-    },
-    getPosition() {
-      return {
-        x: this.owner.x + 80,
-        y: this.owner.y + 40,
-      };
-    },
     owner: null,
     links: [],
+    ...output,
   });
 
   const item = Vue.observable({
@@ -124,6 +130,7 @@ export const declaration = {
   components: {
     "output-pulse-item": () => import(__filename).then((it) => it.default),
   },
+  types: [output],
 };
 </script>
 <style lang="scss" scoped>

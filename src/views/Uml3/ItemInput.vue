@@ -37,25 +37,32 @@ export default {
   },
 };
 
+const prefix = "dock-input-";
+
+const input = {
+  $type: prefix + "input",
+  getValue() {
+    return this.links
+      .map((link) => {
+        return link.input.getValue();
+      })
+      .reduce((x, y) => x || y, false);
+  },
+  getPosition() {
+    return {
+      x: this.owner.x,
+      y: this.owner.y + 40,
+    };
+  },
+};
+
 const createComponent = () => {
   const dock = Vue.observable({
     id: Math.random().toString(16).slice(2),
     type: "input",
-    getValue() {
-      return this.links
-        .map((link) => {
-          return link.input.getValue();
-        })
-        .reduce((x, y) => x || y, false);
-    },
-    getPosition() {
-      return {
-        x: this.owner.x,
-        y: this.owner.y + 40,
-      };
-    },
     owner: null,
     links: [],
+    ...input,
   });
 
   const item = Vue.observable({
@@ -87,6 +94,7 @@ export const declaration = {
   components: {
     "input-item": () => import(__filename).then((it) => it.default),
   },
+  types: [input],
 };
 </script>
 <style lang="scss" scoped>

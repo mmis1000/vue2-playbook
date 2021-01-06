@@ -3,23 +3,32 @@
 import ItemDummy from "../ItemDummy.vue";
 import Vue from "vue";
 
+const prefix = "dock-sound-";
+
+const input = {
+  $type: prefix + "input",
+  getValue() {
+    return this.links
+      .map((link) => {
+        return link.input.getValue();
+      })
+      .reduce((x, y) => x || y, false);
+  },
+  getPosition() {
+    return {
+      x: this.owner.x,
+      y: this.owner.y + 40,
+    };
+  },
+};
+
 const createComponent = () => {
   const dock = Vue.observable({
     id: Math.random().toString(16).slice(2),
     type: 'input',
-    getValue() {
-      return this.links.map(link => {
-        return link.input.getValue()
-      }).reduce((x, y) => x || y, false)
-    },
-    getPosition() {
-      return {
-        x: this.owner.x,
-        y: this.owner.y + 40
-      }
-    },
     owner: null,
-    links: []
+    links: [],
+    ...input
   })
 
   const item = Vue.observable({
@@ -867,5 +876,6 @@ export const declaration = {
     })
   },
   optionsPanel,
-  options
+  options,
+  types: [input]
 }

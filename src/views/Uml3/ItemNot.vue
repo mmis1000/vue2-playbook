@@ -51,14 +51,14 @@ export default {
     handleStateChange(state) {
       if (state === "read") {
         if (this.item.inputs[0].links.length > 0) {
-          this.item._valueIn1 = this.item.inputs[0].links.reduce(
+          this.item._valueIn = this.item.inputs[0].links.reduce(
             (a, b) => a || b.input.getValue(),
             false
           );
         }
       }
       if (state === "write") {
-        const newValue = !this.item._valueIn1;
+        const newValue = !this.item._valueIn;
 
         if (this.prevRead === newValue) {
           if (
@@ -92,43 +92,53 @@ export default {
   },
 };
 
+const prefix = "dock-not-";
+
+const input = {
+  $type: prefix + "input",
+  getValue() {
+    return this.owner._valueIn;
+  },
+  getPosition() {
+    return {
+      x: this.owner.x,
+      y: this.owner.y + 40,
+    };
+  },
+};
+
+const output = {
+  $type: prefix + "output",
+  getValue() {
+    return this.owner._valueOut;
+  },
+  getPosition() {
+    return {
+      x: this.owner.x + 80,
+      y: this.owner.y + 40,
+    };
+  },
+};
 const createComponent = () => {
   const dockIn1 = Vue.observable({
     id: Math.random().toString(16).slice(2),
     type: "input",
-    getValue() {
-      return this.owner._valueIn1;
-    },
-    getPosition() {
-      return {
-        x: this.owner.x,
-        y: this.owner.y + 40,
-      };
-    },
     owner: null,
     links: [],
+    ...input,
   });
   const dockOut = Vue.observable({
     id: Math.random().toString(16).slice(2),
     type: "output",
-    getValue() {
-      return this.owner._valueOut;
-    },
-    getPosition() {
-      return {
-        x: this.owner.x + 80,
-        y: this.owner.y + 40,
-      };
-    },
     owner: null,
     links: [],
+    ...output,
   });
 
   const item = Vue.observable({
     id: Math.random().toString(16).slice(2),
     renderType: "not-item",
-    _valueIn1: false,
-    _valueIn2: false,
+    _valueIn: false,
     _valueOut: true,
     _holdTime: 0,
     _prevRead: true,
@@ -162,6 +172,7 @@ export const declaration = {
   components: {
     "not-item": () => import(__filename).then((it) => it.default),
   },
+  types: [input, output],
 };
 </script>
 <style lang="scss" scoped>

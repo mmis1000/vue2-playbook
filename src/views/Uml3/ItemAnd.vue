@@ -99,51 +99,67 @@ export default {
   },
 };
 
+const prefix = "dock-and-";
+
+const input1 = {
+  $type: prefix + "input1",
+  getValue() {
+    return this.owner._valueIn1;
+  },
+  getPosition() {
+    return {
+      x: this.owner.x,
+      y: this.owner.y + 20,
+    };
+  },
+};
+
+const input2 = {
+  $type: prefix + "input2",
+  getValue() {
+    return this.owner._valueIn2;
+  },
+  getPosition() {
+    return {
+      x: this.owner.x,
+      y: this.owner.y + 60,
+    };
+  },
+};
+
+const output = {
+  $type: prefix + "output",
+  getValue() {
+    return this.owner._valueOut;
+  },
+  getPosition() {
+    return {
+      x: this.owner.x + 80,
+      y: this.owner.y + 40,
+    };
+  },
+};
 const createComponent = () => {
   const dockIn1 = Vue.observable({
     id: Math.random().toString(16).slice(2),
     type: "input",
-    getValue() {
-      return this.owner._valueIn1;
-    },
-    getPosition() {
-      return {
-        x: this.owner.x,
-        y: this.owner.y + 20,
-      };
-    },
     owner: null,
     links: [],
+    ...input1,
   });
   const dockIn2 = Vue.observable({
     id: Math.random().toString(16).slice(2),
     type: "input",
-    getValue() {
-      return this.owner._valueIn2;
-    },
-    getPosition() {
-      return {
-        x: this.owner.x,
-        y: this.owner.y + 60,
-      };
-    },
     owner: null,
     links: [],
+    ...input2,
   });
   const dockOut = Vue.observable({
     id: Math.random().toString(16).slice(2),
     type: "output",
-    getValue() {
-      return this.owner._valueOut;
-    },
-    getPosition() {
-      return {
-        x: this.owner.x + 80,
-        y: this.owner.y + 40,
-      };
-    },
     owner: null,
     links: [],
+    ...output,
   });
 
   const item = Vue.observable({
@@ -186,6 +202,7 @@ export const declaration = {
   components: {
     "and-item": () => import(__filename).then((it) => it.default),
   },
+  types: [input1, input2, output],
 };
 </script>
 <style lang="scss" scoped>

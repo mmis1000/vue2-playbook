@@ -5,15 +5,18 @@
     </div>
     <div>
       <label for="curve" class="option">
-        <input type="checkbox" id="curve" v-model="curved">
+        <input type="checkbox" id="curve" v-model="curved" />
         Use curve line
       </label>
     </div>
     <div>
       <label for="grid" class="option">
-        <input type="checkbox" id="grid" v-model="grided">
+        <input type="checkbox" id="grid" v-model="grided" />
         Snap to grid
       </label>
+    </div>
+    <div>
+      <button class="add-button" @click="exportData">Export</button>
     </div>
     <component
       v-for="[key, value] of Object.entries(items)"
@@ -21,7 +24,7 @@
       :key="key"
       :item="value"
       :options="options"
-      class="item "
+      class="item"
       :class="{ target: targetId === value.id }"
     ></component>
     <template v-if="!curved">
@@ -50,13 +53,16 @@
     ></Dock>
     <PanelControl
       ref="panelControl"
-      class='panel'
+      class="panel"
       :options="fullPanelOptions"
       :panelConfig="fullPanelConfig"
       :selected="targetPanelSelected"
       :position="panelPosition.config"
     />
-    <RunInterval :interval="childPanelOptions.global.timerInterval / 2" @tick="onTick"/>
+    <RunInterval
+      :interval="childPanelOptions.global.timerInterval / 2"
+      @tick="onTick"
+    />
   </div>
 </template>
 
@@ -74,7 +80,7 @@ import Dock from "./Uml3/Dock";
 import Link from "./Uml3/Link";
 import LinkCurved from "./Uml3/LinkCurved";
 import PanelControl from "./Uml3/PanelControl";
-import RunInterval from '@/components/RunInterval.vue'
+import RunInterval from "@/components/RunInterval.vue";
 
 /**
  * @typedef {Object} Timer
@@ -97,7 +103,7 @@ export default {
     UmlLink: Link,
     UmlLinkCurved: LinkCurved,
     PanelControl,
-    RunInterval
+    RunInterval,
   },
   /**
    * @returns {{
@@ -105,52 +111,54 @@ export default {
    *   setTargetOptionsAndConfig (options: any, config: any, title?: string, id?: string): void
    * }}
    */
-  provide () {
+  provide() {
     return {
       timer: this.timer,
-      setTargetOptionsAndConfig: (options, config, title = '', id = null) => {
-        this.targetPanelOptions = options
-        this.targetPanelConfig = config
-        this.targetPanelSelected = title
-        this.targetId = id
-      }
-    }
+      setTargetOptionsAndConfig: (options, config, title = "", id = null) => {
+        this.targetPanelOptions = options;
+        this.targetPanelConfig = config;
+        this.targetPanelSelected = title;
+        this.targetId = id;
+      },
+    };
   },
   data() {
     return {
       panelPosition: {
         config: {
           x: 0,
-          y: 0
-        }
+          y: 0,
+        },
       },
       timeoutId: null,
       childPanelOptions: {
         global: {
-          timerInterval: 100
+          timerInterval: 100,
         },
-        ...itemSoundDef.options
+        ...itemSoundDef.options,
       },
       childPanelConfig: [
         {
-          title: 'System',
-          items: [{
-            name: 'Tick interval',
-            type: 'number',
-            min: 20,
-            max: Infinity,
-            path: ['global', 'timerInterval']
-          }]
+          title: "System",
+          items: [
+            {
+              name: "Tick interval",
+              type: "number",
+              min: 20,
+              max: Infinity,
+              path: ["global", "timerInterval"],
+            },
+          ],
         },
-        ...itemSoundDef.optionsPanel
+        ...itemSoundDef.optionsPanel,
       ],
       targetPanelOptions: {},
       targetPanelConfig: [],
-      targetPanelSelected: '',
+      targetPanelSelected: "",
       targetId: null,
       timer: {
-        state: 'read',
-        ops: 0
+        state: "read",
+        ops: 0,
       },
       curved: true,
       grided: true,
@@ -163,7 +171,7 @@ export default {
         ...itemNotDef.menu,
         ...itemAndDef.menu,
         ...itemXorDef.menu,
-        ...itemXnorDef.menu
+        ...itemXnorDef.menu,
       ],
       /** @type {Record<string,any>} */
       items: {
@@ -187,9 +195,7 @@ export default {
           getPosition(): {x,y} // item of self,
           getValue(): boolean,
           owner: item,
-          links: {
-            link_id1: link
-          }
+          links: []
         }
         */
       },
@@ -204,146 +210,174 @@ export default {
         */
       },
       /** @type {any} */
-      first: null
-    }
+      first: null,
+    };
   },
   computed: {
     /**
      * @returns {any}
      */
-    fullPanelOptions () {
+    fullPanelOptions() {
       return {
         ...this.childPanelOptions,
         ...this.targetPanelOptions,
-      }
+      };
     },
     /**
      * @returns {any}
      */
-    fullPanelConfig () {
+    fullPanelConfig() {
       return [
         ...this.targetPanelConfig,
-        ...this.childPanelConfig.map(i => ({
+        ...this.childPanelConfig.map((i) => ({
           ...i,
-          title: i.title + ' (Global)'
-        }))
-      ]
+          title: i.title + " (Global)",
+        })),
+      ];
     },
     /**
      * @return {Record<string,any>}
      */
-    options () {
+    options() {
       if (this.grided) {
         return {
           gridPassive: [20, 20],
-          containment: '.container'
-        }
+          containment: ".container",
+        };
       } else {
         return {
-          containment: '.container'
-        }
+          containment: ".container",
+        };
       }
-    }
+    },
   },
   methods: {
-    newId () {
-      return Math.random().toString(16).slice(2)
+    newId() {
+      return Math.random().toString(16).slice(2);
     },
     newLink() {
-      const id = this.newId()
+      const id = this.newId();
       return {
         id,
         input: null,
-        output: null
-      }
+        output: null,
+      };
     },
     addItem(def) {
-      const { docks, item } = def.createComponent()
-      this.$set(this.items, item.id, item)
+      const { docks, item } = def.createComponent();
+      this.$set(this.items, item.id, item);
       for (const dock of docks) {
-        this.$set(this.docks, dock.id, dock)
+        this.$set(this.docks, dock.id, dock);
       }
 
       /**
        * @type {HTMLDivElement}
        */
-      const div = this.$refs.container
-      item.x = div.offsetWidth / 2 - 40
-      item.y = div.offsetHeight / 2 - 40
+      const div = this.$refs.container;
+      item.x = div.offsetWidth / 2 - 40;
+      item.y = div.offsetHeight / 2 - 40;
 
       if (this.grided) {
-        item.x = item.x - (item.x % 20)
-        item.y = item.y - (item.y % 20)
+        item.x = item.x - (item.x % 20);
+        item.y = item.y - (item.y % 20);
       }
     },
-    handleDockClick (dock) {
-      const first = this.first
+    handleDockClick(dock) {
+      const first = this.first;
 
       if (first != null) {
         if (first.id === dock.id) {
-          this.first = null
-          return
+          this.first = null;
+          return;
         }
 
         if (first.type === dock.type) {
-          this.first = dock
-          return
+          this.first = dock;
+          return;
         }
 
-        if (first.links.find(it => {
-          if (first.type === 'output') {
-            return it.output.id === dock.id
-          } else {
-            return it.input.id === dock.id
-          }
-        })) {
-          this.first = dock
-          return
+        if (
+          first.links.find((it) => {
+            if (first.type === "output") {
+              return it.output.id === dock.id;
+            } else {
+              return it.input.id === dock.id;
+            }
+          })
+        ) {
+          this.first = dock;
+          return;
         }
 
-        const link = this.newLink()
+        const link = this.newLink();
 
-        if (first.type === 'output') {
-          link.input = first
-          link.output = dock
+        if (first.type === "output") {
+          link.input = first;
+          link.output = dock;
         } else {
-          link.output = first
-          link.input = dock
+          link.output = first;
+          link.input = dock;
         }
 
-        this.$set(this.links, link.id, link)
+        this.$set(this.links, link.id, link);
 
-        if (first.type === 'output') {
-          first.links.push(link)
-          dock.links.push(link)
+        if (first.type === "output") {
+          first.links.push(link);
+          dock.links.push(link);
         } else {
-          dock.links.push(link)
-          first.links.push(link)
+          dock.links.push(link);
+          first.links.push(link);
         }
 
-        this.first = null
+        this.first = null;
       } else {
-        this.first = dock
+        this.first = dock;
       }
     },
-    onTick () {
-      if (this.timer.state === 'read') {
-        this.timer.state = 'write'
+    onTick() {
+      if (this.timer.state === "read") {
+        this.timer.state = "write";
       } else {
-        this.timer.state = 'read'
+        this.timer.state = "read";
       }
-    }
+    },
+    mapObject(o, cb) {
+      return Object.entries(o)
+        .map((e) => [e[0], cb(e[1])])
+        .reduce((o, c) => ((o[c[0]] = c[1]), o), {});
+    },
+    exportData() {
+      const items = this.mapObject(this.items, (e) => ({
+        ...e,
+        inputs: e.inputs.map((i) => i.id),
+        outputs: e.outputs.map((i) => i.id),
+      }));
+
+      const docks = this.mapObject(this.docks, (e) => ({
+        ...e,
+        links: e.links.map((l) => l.id),
+        owner: e.owner.id,
+      }));
+
+      const links = this.mapObject(this.links, (e) => ({
+        ...e,
+        input: e.input.id,
+        output: e.output.id,
+      }));
+
+      console.log(JSON.stringify({ items, docks, links }, 0, 4));
+    },
   },
-  mounted () {
-    const containerWidth = this.$refs.container.offsetWidth
-    const containerHeight = this.$refs.container.offsetHeight
-    const panelWidth = this.$refs.panelControl.$el.offsetWidth
-    const panelHeight= this.$refs.panelControl.$el.offsetHeight
+  mounted() {
+    const containerWidth = this.$refs.container.offsetWidth;
+    const containerHeight = this.$refs.container.offsetHeight;
+    const panelWidth = this.$refs.panelControl.$el.offsetWidth;
+    const panelHeight = this.$refs.panelControl.$el.offsetHeight;
     this.panelPosition.config = {
       x: (containerWidth - panelWidth) / 2,
-      y: containerHeight - panelHeight - 40
-    }
-  }
+      y: containerHeight - panelHeight - 40,
+    };
+  },
 };
 </script>
 
@@ -356,7 +390,6 @@ export default {
   display: flex;
   position: relative;
   overflow: hidden;
-
 
   align-items: flex-start;
   align-content: flex-start;
