@@ -202,6 +202,7 @@ export default {
 
       .item {
         margin: 4px;
+        white-space: nowrap;
 
         label {
           display: flex;
