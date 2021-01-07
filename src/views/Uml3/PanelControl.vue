@@ -203,6 +203,16 @@ export default {
 
       .item {
         margin: 4px;
+
+        label {
+          display: flex;
+
+          select,
+          input[type="number"] {
+            margin-left: 8px;
+            flex-grow: 1;
+          }
+        }
       }
     }
   }

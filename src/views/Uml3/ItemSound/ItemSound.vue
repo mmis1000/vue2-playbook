@@ -184,6 +184,7 @@ export default {
   border: 4px solid lightblue;
   border-radius: 8px;
   background: black;
+  cursor: pointer;
 }
 .item.active {
   background: white;

@@ -4,30 +4,6 @@
       <button class="add-button" @click="addItem(item)">{{ item.name }}</button>
     </div>
     <div>
-      <label for="curve" class="option">
-        <input type="checkbox" id="curve" v-model="curved" />
-        Use curve line
-      </label>
-    </div>
-    <div>
-      <label for="grid" class="option">
-        <input type="checkbox" id="grid" v-model="grided" />
-        Snap to grid
-      </label>
-    </div>
-    <div>
-      <label for="delete-mode" class="option">
-        <input type="checkbox" id="delete-mode" v-model="deleteMode" />
-        Delete mode
-      </label>
-    </div>
-    <div>
-      <label for="lock-mode" class="option">
-        <input type="checkbox" id="lock-mode" v-model="lockMode" />
-        Lock mode
-      </label>
-    </div>
-    <div>
       <button class="add-button" @click="exportData">Export</button>
     </div>
     <component
@@ -75,11 +51,11 @@
     <PanelControl
       ref="panelControl"
       class="panel"
-      v-model="panelOpened"
+      v-model="options.panels.config.open"
       :options="fullPanelOptions"
       :panelConfig="fullPanelConfig"
       :selected="targetPanelSelected"
-      :position="panelPosition.config"
+      :position="options.panels.config"
     />
     <RunInterval
       v-if="!deleteMode"
@@ -169,19 +145,22 @@ export default {
   },
   data() {
     return {
-      panelPosition: {
-        config: {
-          x: 0,
-          y: 0,
-        },
-      },
       timeoutId: null,
       options: {
+        panels: {
+          config: {
+            x: 0,
+            y: 0,
+            open: true,
+          },
+        },
         editorState: {
           mode: "normal",
         },
         global: {
           timerInterval: 100,
+          lineStyle: "curved",
+          grided: true,
         },
         ...defs
           .flatMap(i => (i.options ? [i.options] : []))
@@ -198,11 +177,60 @@ export default {
               max: Infinity,
               path: ["global", "timerInterval"],
             },
+            {
+              name: "Editor mode",
+              type: "select",
+              options: [
+                {
+                  name: "normal",
+                  value: "normal",
+                },
+                {
+                  name: "delete",
+                  value: "delete",
+                },
+                {
+                  name: "locked",
+                  value: "locked",
+                },
+              ],
+              path: ["editorState", "mode"],
+            },
+            {
+              name: "Line style",
+              type: "select",
+              options: [
+                {
+                  name: "direct",
+                  value: "direct",
+                },
+                {
+                  name: "curved",
+                  value: "curved",
+                },
+              ],
+              path: ["global", "lineStyle"],
+            },
+            {
+              name: "Align to grid",
+              type: "select",
+              options: [
+                {
+                  name: "on",
+                  value: true,
+                },
+                {
+                  name: "off",
+                  value: false,
+                },
+              ],
+              path: ["global", "grided"],
+            },
           ],
         },
         ...defs.flatMap(i => i.optionsPanel ?? []),
       ],
-      panelOpened: false,
+      panelOpened: true,
       targetPanelOptions: {},
       targetPanelConfig: [],
       targetPanelSelected: "",
@@ -211,8 +239,6 @@ export default {
         state: "read",
         ops: 0,
       },
-      curved: true,
-      grided: true,
       menu: defs.flatMap(i => i.menu),
       /** @type {Record<string,any>} */
       items: {
@@ -255,23 +281,28 @@ export default {
     };
   },
   computed: {
+    curved: {
+      /**
+       * @returns {boolean}
+       */
+      get() {
+        return this.options.global.lineStyle === "curved";
+      },
+    },
+    grided: {
+      /**
+       * @returns {boolean}
+       */
+      get() {
+        return this.options.global.grided;
+      },
+    },
     deleteMode: {
       /**
        * @returns {boolean}
        */
       get() {
         return this.options.editorState.mode === "delete";
-      },
-      /**
-       * @param {boolean} v
-       * @returns {void}
-       */
-      set(v) {
-        if (v) {
-          this.options.editorState.mode = "delete";
-        } else {
-          this.options.editorState.mode = "normal";
-        }
       },
     },
     lockMode: {
@@ -280,17 +311,6 @@ export default {
        */
       get() {
         return this.options.editorState.mode === "lock";
-      },
-      /**
-       * @param {boolean} v
-       * @returns {void}
-       */
-      set(v) {
-        if (v) {
-          this.options.editorState.mode = "lock";
-        } else {
-          this.options.editorState.mode = "normal";
-        }
       },
     },
     /**
@@ -546,10 +566,8 @@ export default {
     const containerHeight = this.$refs.container.offsetHeight;
     const panelWidth = this.$refs.panelControl.$el.offsetWidth;
     const panelHeight = this.$refs.panelControl.$el.offsetHeight;
-    this.panelPosition.config = {
-      x: (containerWidth - panelWidth) / 2,
-      y: containerHeight - panelHeight - 40,
-    };
+    this.options.panels.config.x = (containerWidth - panelWidth) / 2;
+    this.options.panels.config.y = containerHeight - panelHeight - 40;
   },
 };
 </script>
