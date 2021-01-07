@@ -55,6 +55,8 @@ export default {
             (a, b) => a || b.input.getValue(),
             false
           );
+        } else {
+          this.item._valueIn1 = false;
         }
 
         if (this.item.inputs[1].links.length > 0) {
@@ -62,6 +64,8 @@ export default {
             (a, b) => a || b.input.getValue(),
             false
           );
+        } else {
+          this.item._valueIn2 = false;
         }
       }
       if (state === "write") {

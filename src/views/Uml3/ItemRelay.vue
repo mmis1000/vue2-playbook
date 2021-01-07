@@ -55,6 +55,8 @@ export default {
             (a, b) => a || b.input.getValue(),
             false
           );
+        } else {
+          this.item._valueIn = false;
         }
       }
       if (state === "write") {

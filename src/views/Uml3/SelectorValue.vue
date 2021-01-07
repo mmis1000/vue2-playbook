@@ -1,10 +1,18 @@
 <template>
   <div class="selector">
-    <button class="button" @click.prevent.stop.capture="emit(value - 1)">
+    <button
+      class="button"
+      @click.prevent.stop.capture="emit(value - 1)"
+      v-if="editorState.mode === 'normal'"
+    >
       -
     </button>
     <div class="text handle">{{ text }}{{ value }}</div>
-    <button class="button" @click.prevent.stop.capture="emit(value + 1)">
+    <button
+      class="button"
+      @click.prevent.stop.capture="emit(value + 1)"
+      v-if="editorState.mode === 'normal'"
+    >
       +
     </button>
   </div>
@@ -29,6 +37,7 @@ export default {
       default: Infinity,
     },
   },
+  inject: ["editorState"],
   methods: {
     emit(value) {
       if (isNaN(value)) {
@@ -51,6 +60,7 @@ export default {
 <style lang="scss" scoped>
 .selector {
   padding: 0px;
+  height: 24px;
   display: flex;
   justify-content: stretch;
   align-items: center;

@@ -4,13 +4,13 @@
     :options="dragOptions"
     :left.sync="position.x"
     :top.sync="position.y"
-    @staticClick="open = !open"
+    @staticClick="$emit('input', !value)"
   >
     <div class="title handle">
       Config {{ selected ? "(+" + selected + ")" : "" }}
-      {{ open ? "[open]" : "[close]" }}
+      {{ value ? "[open]" : "[close]" }}
     </div>
-    <div class="wrapper" :class="{ hide: !open }">
+    <div class="wrapper" :class="{ hide: !value }">
       <div class="panel" v-for="(panel, index1) in mappedPanels" :key="index1">
         <div class="panel-title">{{ panel.title }}</div>
         <div class="item" v-for="(item, index2) in panel.items" :key="index2">
@@ -86,10 +86,13 @@ export default {
       default: "",
     },
     position: Object,
+    value: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
-      open: false,
       dragOptions: {},
     };
   },
@@ -113,10 +116,10 @@ export default {
      */
     mappedPanels() {
       const self = this;
-      return this.panelConfig.map((panel) => {
+      return this.panelConfig.map(panel => {
         return {
           title: panel.title,
-          items: panel.items.map((item) => {
+          items: panel.items.map(item => {
             switch (item.type) {
               case "select":
                 return {
@@ -173,6 +176,8 @@ export default {
     box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.5);
     position: relative;
     z-index: 2;
+
+    cursor: pointer;
   }
 
   .wrapper {

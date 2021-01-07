@@ -1,9 +1,16 @@
 <template>
-  <svg :style="positions.style" v-bind="positions.svgProp">
+  <svg class="svg-root" :style="positions.style" v-bind="positions.svgProp">
     <line
       v-bind="positions.lineProp"
       style="stroke-width: 2"
       :style="{ stroke: active ? 'green' : 'grey' }"
+    ></line>
+    <line
+      v-if="deleteMode"
+      v-bind="positions.lineProp"
+      style="stroke-width: 8"
+      class="delete-hover"
+      @click="$emit('delete', link)"
     ></line>
   </svg>
 </template>
@@ -12,6 +19,10 @@ export default {
   name: "Uml3Link",
   props: {
     link: Object,
+    deleteMode: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     /**
@@ -50,4 +61,21 @@ export default {
   },
 };
 </script>
-<style lang="stylus" scoped></style>
+<style lang="scss" scoped>
+.svg-root {
+  pointer-events: none;
+
+  & * {
+    pointer-events: initial;
+  }
+}
+.delete-hover {
+  stroke-width: 8;
+  opacity: 0;
+  stroke: red;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+  }
+}
+</style>

@@ -1,9 +1,6 @@
 <template>
   <div id="app">
-    <div
-      class="nav "
-      :class="{ closed: !showNav }"
-    >
+    <div class="nav " :class="{ closed: !showNav }">
       <div class="close" @click="showNav = !showNav">[Close]</div>
       <router-link to="/home">Home</router-link>
       <router-link to="/about">About</router-link>
@@ -17,11 +14,13 @@
       <router-link to="/uml2">Graph3</router-link>
       <router-link to="/uml3">Graph4</router-link>
       <router-link to="/clock">Clock</router-link>
-      <router-link to="/sync-v-model-example">Sync and v-model example</router-link>
+      <router-link to="/sync-v-model-example"
+        >Sync and v-model example</router-link
+      >
     </div>
     <div class="main">
       <transition name="slide">
-        <router-view :key="$route.path"/>
+        <router-view :key="$route.path" />
       </transition>
       <div v-if="!showNav" class="toggle" @click="showNav = !showNav">
         <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
@@ -32,16 +31,17 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
-      showNav: window.innerWidth >= 600
-    }
-  }
-}
+      showNav: window.innerWidth >= 600,
+    };
+  },
+};
 </script>
 
 
 <style>
+@import url(https://use.fontawesome.com/releases/v5.8.2/css/all.css);
 body {
   margin: 0;
   padding: 0;
@@ -51,8 +51,6 @@ body {
 </style>
 
 <style lang="scss" scoped>
-@import url(https://use.fontawesome.com/releases/v5.8.2/css/all.css);
-
 #app {
   display: flex;
   justify-content: stretch;
@@ -60,7 +58,7 @@ body {
   min-height: 100vh;
   flex-direction: column;
 
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -77,7 +75,7 @@ body {
     background: #444;
     z-index: 2;
 
-    transition: max-width .4s;
+    transition: max-width 0.4s;
     overflow-x: hidden;
     max-width: 300px;
     &.closed {
@@ -124,7 +122,7 @@ body {
   }
 }
 
-@media screen and (min-width: 600px ) {
+@media screen and (min-width: 600px) {
   #app {
     flex-direction: row;
     .main {
@@ -152,7 +150,7 @@ body {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        
+
         color: #ccc;
 
         &:not(:last-child) {
@@ -160,7 +158,7 @@ body {
         }
 
         &:hover {
-          background: rgba(30%, 30%, 30%, 33%)
+          background: rgba(30%, 30%, 30%, 33%);
         }
         &.router-link-exact-active {
           color: #36a;
@@ -181,27 +179,29 @@ body {
   }
 }
 
-.slide-enter-active, .slide-leave-active {
-  transition: transform .3s linear, opacity .3s;
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s linear, opacity 0.3s;
   //transform: scaleX(1);
-  transform:  translateX(0%) rotateY(0deg) translateX(0%);
+  transform: translateX(0%) rotateY(0deg) translateX(0%);
   opacity: 1;
 }
 
 .slide-enter {
   //transform: scaleX(0);
-  transform:  translateX(50%) rotateY(90deg) translateX(50%);
+  transform: translateX(50%) rotateY(90deg) translateX(50%);
   opacity: 0;
 }
 
-.slide-leave-to  {
+.slide-leave-to {
   //transform: scaleX(0);
-  transform: translateX(-50%) rotateY(-90deg) translateX(-50%) ;
+  transform: translateX(-50%) rotateY(-90deg) translateX(-50%);
   opacity: 0;
 }
 
-.blur-enter-active, .blur-leave-active {
-  transition: filter .3s linear, opacity .3s linear;
+.blur-enter-active,
+.blur-leave-active {
+  transition: filter 0.3s linear, opacity 0.3s linear;
   filter: blur(0px);
   opacity: 1;
 }

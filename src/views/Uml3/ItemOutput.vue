@@ -7,7 +7,8 @@
     :options="options"
     @staticClick="active = !active"
   >
-    Output
+    Output <br />
+    ({{ active ? "on" : "off" }})
   </drag>
 </template>
 <script>
@@ -110,6 +111,12 @@ export const declaration = {
   border: 4px solid lightblue;
   border-radius: 8px;
   background: black;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
 }
 .item.active {
   background: white;

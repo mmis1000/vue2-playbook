@@ -16,16 +16,31 @@
       </label>
     </div>
     <div>
+      <label for="delete-mode" class="option">
+        <input type="checkbox" id="delete-mode" v-model="deleteMode" />
+        Delete mode
+      </label>
+    </div>
+    <div>
+      <label for="lock-mode" class="option">
+        <input type="checkbox" id="lock-mode" v-model="lockMode" />
+        Lock mode
+      </label>
+    </div>
+    <div>
       <button class="add-button" @click="exportData">Export</button>
     </div>
     <component
       v-for="[key, value] of Object.entries(items)"
-      :is="value.renderType"
+      :is="
+        options.editorState.mode === 'delete' ? 'item-delete' : value.renderType
+      "
       :key="key"
       :item="value"
       :options="draggableOptions"
       class="item"
       :class="{ target: targetId === value.id }"
+      @delete="handleDelete"
     ></component>
     <template v-if="!curved">
       <UmlLink
@@ -33,6 +48,8 @@
         :key="key"
         :link="value"
         class="link"
+        :delete-mode="options.editorState.mode === 'delete'"
+        @delete="handleDeleteLink"
       ></UmlLink>
     </template>
     <template v-else>
@@ -41,25 +58,34 @@
         :key="key + '-c'"
         :link="value"
         class="link"
+        :delete-mode="options.editorState.mode === 'delete'"
+        @delete="handleDeleteLink"
       ></UmlLinkCurved>
     </template>
-    <Dock
-      v-for="[key, value] of Object.entries(docks)"
-      :key="key"
-      :dock="value"
-      class="dock"
-      :selected="first && first.id === key"
-      @click="handleDockClick(value)"
-    ></Dock>
+    <template v-if="options.editorState.mode === 'normal'">
+      <Dock
+        v-for="[key, value] of Object.entries(docks)"
+        :key="key"
+        :dock="value"
+        class="dock"
+        :selected="first && first.id === key"
+        @click="handleDockClick(value)"
+      ></Dock>
+    </template>
     <PanelControl
       ref="panelControl"
       class="panel"
+      v-model="panelOpened"
       :options="fullPanelOptions"
       :panelConfig="fullPanelConfig"
       :selected="targetPanelSelected"
       :position="panelPosition.config"
     />
-    <RunInterval :interval="options.global.timerInterval / 2" @tick="onTick" />
+    <RunInterval
+      v-if="!deleteMode"
+      :interval="options.global.timerInterval / 2"
+      @tick="onTick"
+    />
   </div>
 </template>
 
@@ -73,6 +99,7 @@ import { declaration as itemNotDef } from "./Uml3/ItemNot";
 import { declaration as itemRelayDef } from "./Uml3/ItemRelay";
 import { declaration as itemAndDef } from "./Uml3/ItemAnd";
 import { declaration as itemSoundDef } from "./Uml3/ItemSound";
+import ItemDelete from "./Uml3/ItemDelete";
 import Dock from "./Uml3/Dock";
 import Link from "./Uml3/Link";
 import LinkCurved from "./Uml3/LinkCurved";
@@ -118,6 +145,7 @@ export default {
     UmlLinkCurved: LinkCurved,
     PanelControl,
     RunInterval,
+    ItemDelete,
   },
   /**
    * @returns {{
@@ -128,11 +156,14 @@ export default {
   provide() {
     return {
       timer: this.timer,
+      editorState: this.options.editorState,
       setTargetOptionsAndConfig: (options, config, title = "", id = null) => {
         this.targetPanelOptions = options;
         this.targetPanelConfig = config;
         this.targetPanelSelected = title;
         this.targetId = id;
+
+        this.panelOpened = true;
       },
     };
   },
@@ -146,6 +177,9 @@ export default {
       },
       timeoutId: null,
       options: {
+        editorState: {
+          mode: "normal",
+        },
         global: {
           timerInterval: 100,
         },
@@ -168,6 +202,7 @@ export default {
         },
         ...defs.flatMap(i => i.optionsPanel ?? []),
       ],
+      panelOpened: false,
       targetPanelOptions: {},
       targetPanelConfig: [],
       targetPanelSelected: "",
@@ -220,6 +255,44 @@ export default {
     };
   },
   computed: {
+    deleteMode: {
+      /**
+       * @returns {boolean}
+       */
+      get() {
+        return this.options.editorState.mode === "delete";
+      },
+      /**
+       * @param {boolean} v
+       * @returns {void}
+       */
+      set(v) {
+        if (v) {
+          this.options.editorState.mode = "delete";
+        } else {
+          this.options.editorState.mode = "normal";
+        }
+      },
+    },
+    lockMode: {
+      /**
+       * @returns {boolean}
+       */
+      get() {
+        return this.options.editorState.mode === "lock";
+      },
+      /**
+       * @param {boolean} v
+       * @returns {void}
+       */
+      set(v) {
+        if (v) {
+          this.options.editorState.mode = "lock";
+        } else {
+          this.options.editorState.mode = "normal";
+        }
+      },
+    },
     /**
      * @returns {any}
      */
@@ -413,6 +486,59 @@ export default {
       for (let domain of Object.keys(options)) {
         Object.assign(this.options[domain], options[domain]);
       }
+    },
+    unlink(linkId) {
+      const link = this.links[linkId];
+
+      this.$delete(this.links, linkId);
+      const inDock = link.input;
+      const outDock = link.output;
+
+      outDock.links.splice(
+        outDock.links.findIndex(i => i.id === linkId),
+        1
+      );
+
+      inDock.links.splice(
+        inDock.links.findIndex(i => i.id === linkId),
+        1
+      );
+
+      link.input = null;
+
+      link.output = null;
+    },
+    handleDelete(item) {
+      const pendingLinks = new Set();
+
+      for (let dock of item.inputs) {
+        for (let link of dock.links) {
+          pendingLinks.add(link.id);
+        }
+      }
+
+      for (let dock of item.outputs) {
+        for (let link of dock.links) {
+          pendingLinks.add(link.id);
+        }
+      }
+
+      for (const id of pendingLinks) {
+        this.unlink(id);
+      }
+
+      for (const dock of item.outputs) {
+        this.$delete(this.docks, dock.id);
+      }
+
+      for (const dock of item.inputs) {
+        this.$delete(this.docks, dock.id);
+      }
+
+      this.$delete(this.items, item.id);
+    },
+    handleDeleteLink(link) {
+      this.unlink(link.id);
     },
   },
   mounted() {

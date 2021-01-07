@@ -1,5 +1,5 @@
 <template>
-  <svg :style="positions.style" v-bind="positions.svgProp" class="svg-root">
+  <svg class="svg-root" :style="positions.style" v-bind="positions.svgProp">
     <path
       v-bind="positions.pathProp"
       fill="none"
@@ -13,6 +13,13 @@
       style="stroke-width: 2; opacity: 0.8"
       :style="{ stroke: active ? 'green' : 'grey' }"
     ></path>
+    <path
+      v-if="deleteMode"
+      v-bind="positions.pathProp"
+      fill="none"
+      class="delete-hover"
+      @click="$emit('delete', link)"
+    ></path>
   </svg>
 </template>
 <script>
@@ -20,6 +27,10 @@ export default {
   name: "Uml3LinkCurved",
   props: {
     link: Object,
+    deleteMode: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     /**
@@ -208,6 +219,15 @@ export default {
 
   & * {
     pointer-events: initial;
+  }
+}
+.delete-hover {
+  stroke-width: 8;
+  opacity: 0;
+  stroke: red;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
   }
 }
 </style>
