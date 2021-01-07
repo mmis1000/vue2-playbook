@@ -58,9 +58,7 @@ const output = {
 };
 const createComponent = () => {
   const dock = Vue.observable({
-    id: Math.random()
-      .toString(16)
-      .slice(2),
+    id: Math.random().toString(16).slice(2),
     type: "output",
     owner: null,
     links: [],
@@ -68,9 +66,7 @@ const createComponent = () => {
   });
 
   const item = Vue.observable({
-    id: Math.random()
-      .toString(16)
-      .slice(2),
+    id: Math.random().toString(16).slice(2),
     renderType: "output-item",
     _value: false,
     x: 0,
@@ -97,7 +93,7 @@ export const declaration = {
     },
   ],
   components: {
-    "output-item": () => import(__filename).then(it => it.default),
+    "output-item": () => import(__filename).then((it) => it.default),
   },
   types: [output],
 };
@@ -115,6 +111,7 @@ export const declaration = {
   display: flex;
   justify-content: center;
   align-items: center;
+  line-height: 24px;
 
   cursor: pointer;
 }

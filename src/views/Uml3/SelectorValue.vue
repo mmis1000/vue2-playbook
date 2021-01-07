@@ -37,7 +37,7 @@ export default {
       default: Infinity,
     },
   },
-  inject: ["editorState"],
+  inject: [/** @type {'editorState'} */ ("editorState")],
   methods: {
     emit(value) {
       if (isNaN(value)) {

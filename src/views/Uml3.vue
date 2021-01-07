@@ -6,6 +6,9 @@
     <div>
       <button class="add-button" @click="exportData">Export</button>
     </div>
+    <div>
+      <button class="add-button" @click="importDialog = true">Import</button>
+    </div>
     <component
       v-for="[key, value] of Object.entries(items)"
       :is="
@@ -62,6 +65,8 @@
       :interval="options.global.timerInterval / 2"
       @tick="onTick"
     />
+    <DialogExport v-model="exportDialog" :text="exported" />
+    <DialogImport v-model="importDialog" @confirm="importText($event)" />
   </div>
 </template>
 
@@ -81,6 +86,8 @@ import Link from "./Uml3/Link";
 import LinkCurved from "./Uml3/LinkCurved";
 import PanelControl from "./Uml3/PanelControl";
 import RunInterval from "@/components/RunInterval.vue";
+import DialogExport from "./Uml3/DialogExport";
+import DialogImport from "./Uml3/DialogImport";
 
 const defs = [
   itemOutputDef,
@@ -94,11 +101,11 @@ const defs = [
   itemXnorDef,
 ];
 
-const types = defs.flatMap(d => d.types ?? []);
+const types = defs.flatMap((d) => d.types ?? []);
 
-const fixType = o => {
+const fixType = (o) => {
   if (o.$type) {
-    const type = types.find(t => t.$type === o.$type);
+    const type = types.find((t) => t.$type === o.$type);
     if (type) {
       Object.assign(o, type);
     }
@@ -115,13 +122,15 @@ const fixType = o => {
 
 export default {
   components: {
-    ...defs.map(d => d.components).reduce((o, c) => ({ ...o, ...c }), {}),
+    ...defs.map((d) => d.components).reduce((o, c) => ({ ...o, ...c }), {}),
     Dock,
     UmlLink: Link,
     UmlLinkCurved: LinkCurved,
     PanelControl,
     RunInterval,
     ItemDelete,
+    DialogExport,
+    DialogImport,
   },
   /**
    * @returns {{
@@ -145,6 +154,11 @@ export default {
   },
   data() {
     return {
+      exportDialog: false,
+      exported: "",
+
+      importDialog: false,
+
       timeoutId: null,
       options: {
         panels: {
@@ -163,7 +177,7 @@ export default {
           grided: true,
         },
         ...defs
-          .flatMap(i => (i.options ? [i.options] : []))
+          .flatMap((i) => (i.options ? [i.options] : []))
           .reduce((o, c) => ({ ...o, ...c }), {}),
       },
       panelConfig: [
@@ -228,7 +242,7 @@ export default {
             },
           ],
         },
-        ...defs.flatMap(i => i.optionsPanel ?? []),
+        ...defs.flatMap((i) => i.optionsPanel ?? []),
       ],
       panelOpened: true,
       targetPanelOptions: {},
@@ -239,7 +253,7 @@ export default {
         state: "read",
         ops: 0,
       },
-      menu: defs.flatMap(i => i.menu),
+      menu: defs.flatMap((i) => i.menu),
       /** @type {Record<string,any>} */
       items: {
         /*
@@ -328,7 +342,7 @@ export default {
     fullPanelConfig() {
       return [
         ...this.targetPanelConfig,
-        ...this.panelConfig.map(i => ({
+        ...this.panelConfig.map((i) => ({
           ...i,
           title: i.title + " (Global)",
         })),
@@ -352,9 +366,7 @@ export default {
   },
   methods: {
     newId() {
-      return Math.random()
-        .toString(16)
-        .slice(2);
+      return Math.random().toString(16).slice(2);
     },
     newLink() {
       const id = this.newId();
@@ -398,7 +410,7 @@ export default {
         }
 
         if (
-          first.links.find(it => {
+          first.links.find((it) => {
             if (first.type === "output") {
               return it.output.id === dock.id;
             } else {
@@ -444,43 +456,52 @@ export default {
     },
     mapObject(o, cb) {
       return Object.entries(o)
-        .map(e => [e[0], cb(e[1])])
+        .map((e) => [e[0], cb(e[1])])
         .reduce((o, c) => ((o[c[0]] = c[1]), o), {});
     },
     exportData() {
-      const items = this.mapObject(this.items, e => ({
+      const items = this.mapObject(this.items, (e) => ({
         ...e,
-        inputs: e.inputs.map(i => i.id),
-        outputs: e.outputs.map(i => i.id),
+        inputs: e.inputs.map((i) => i.id),
+        outputs: e.outputs.map((i) => i.id),
       }));
 
-      const docks = this.mapObject(this.docks, e => ({
+      const docks = this.mapObject(this.docks, (e) => ({
         ...e,
-        links: e.links.map(l => l.id),
+        links: e.links.map((l) => l.id),
         owner: e.owner.id,
       }));
 
-      const links = this.mapObject(this.links, e => ({
+      const links = this.mapObject(this.links, (e) => ({
         ...e,
         input: e.input.id,
         output: e.output.id,
       }));
 
-      console.log(
-        JSON.stringify({ items, docks, links, options: this.options }, 0, 4)
+      const res = JSON.stringify(
+        { items, docks, links, options: this.options },
+        0,
+        4
       );
+      console.log(res);
+      this.exportDialog = true;
+      this.exported = res;
+    },
+    importText(str) {
+      this.importData(JSON.parse(str));
+      this.importDialog = false;
     },
     importData({ items, docks, links, options }) {
-      const fixedItems = this.mapObject(items, e => e);
-      const fixedDocks = this.mapObject(docks, e => fixType(e));
-      const fixedLinks = this.mapObject(links, e => e);
+      const fixedItems = this.mapObject(items, (e) => e);
+      const fixedDocks = this.mapObject(docks, (e) => fixType(e));
+      const fixedLinks = this.mapObject(links, (e) => e);
 
       for (const item of Object.values(fixedItems)) {
-        item.inputs = item.inputs.map(id => fixedDocks[id]);
-        item.outputs = item.outputs.map(id => fixedDocks[id]);
+        item.inputs = item.inputs.map((id) => fixedDocks[id]);
+        item.outputs = item.outputs.map((id) => fixedDocks[id]);
       }
       for (const dock of Object.values(fixedDocks)) {
-        dock.links = dock.links.map(id => fixedLinks[id]);
+        dock.links = dock.links.map((id) => fixedLinks[id]);
         dock.owner = fixedItems[dock.owner];
       }
       for (const link of Object.values(fixedLinks)) {
@@ -515,12 +536,12 @@ export default {
       const outDock = link.output;
 
       outDock.links.splice(
-        outDock.links.findIndex(i => i.id === linkId),
+        outDock.links.findIndex((i) => i.id === linkId),
         1
       );
 
       inDock.links.splice(
-        inDock.links.findIndex(i => i.id === linkId),
+        inDock.links.findIndex((i) => i.id === linkId),
         1
       );
 

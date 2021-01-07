@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="nav " :class="{ closed: !showNav }">
+    <div class="nav" :class="{ closed: !showNav }">
       <div class="close" @click="showNav = !showNav">[Close]</div>
       <router-link to="/home">Home</router-link>
       <router-link to="/about">About</router-link>
@@ -169,11 +169,6 @@ body {
 }
 
 .main {
-  backface-visibility: visible;
-  perspective: 200vw;
-  transform-style: preserve-3d;
-  perspective-origin: 50% 50%;
-
   > * {
     background: rgba(60, 60, 60, 0.5);
   }
@@ -181,6 +176,11 @@ body {
 
 .slide-enter-active,
 .slide-leave-active {
+  backface-visibility: visible;
+  perspective: 200vw;
+  transform-style: preserve-3d;
+  perspective-origin: 50% 50%;
+
   transition: transform 0.3s linear, opacity 0.3s;
   //transform: scaleX(1);
   transform: translateX(0%) rotateY(0deg) translateX(0%);

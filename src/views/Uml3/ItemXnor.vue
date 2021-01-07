@@ -144,27 +144,21 @@ const output = {
 };
 const createComponent = () => {
   const dockIn1 = Vue.observable({
-    id: Math.random()
-      .toString(16)
-      .slice(2),
+    id: Math.random().toString(16).slice(2),
     type: "input",
     owner: null,
     links: [],
     ...input1,
   });
   const dockIn2 = Vue.observable({
-    id: Math.random()
-      .toString(16)
-      .slice(2),
+    id: Math.random().toString(16).slice(2),
     type: "input",
     owner: null,
     links: [],
     ...input2,
   });
   const dockOut = Vue.observable({
-    id: Math.random()
-      .toString(16)
-      .slice(2),
+    id: Math.random().toString(16).slice(2),
     type: "output",
     owner: null,
     links: [],
@@ -172,9 +166,7 @@ const createComponent = () => {
   });
 
   const item = Vue.observable({
-    id: Math.random()
-      .toString(16)
-      .slice(2),
+    id: Math.random().toString(16).slice(2),
     renderType: "xnor-item",
     _valueIn1: false,
     _valueIn2: false,
@@ -211,7 +203,7 @@ export const declaration = {
     },
   ],
   components: {
-    "xnor-item": () => import(__filename).then(it => it.default),
+    "xnor-item": () => import(__filename).then((it) => it.default),
   },
   types: [input1, input2, output],
 };
@@ -225,6 +217,7 @@ export const declaration = {
   border: 4px solid lightblue;
   border-radius: 8px;
   background: black;
+  line-height: 24px;
 }
 .item.active {
   background: white;
