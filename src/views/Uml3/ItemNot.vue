@@ -63,7 +63,7 @@ export default {
         if (this.prevRead === newValue) {
           if (
             this.holdTime <= this.activateTime ||
-            this.holdTime <= this.activateTime
+            this.holdTime <= this.deactivateTime
           ) {
             this.holdTime++;
           }
