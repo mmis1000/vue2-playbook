@@ -25,15 +25,18 @@ import { createComputed } from "../utils.js";
 window.MIDI = MIDI; // Register to global first
 
 export const KET_NODE_MAP_OPTIONS = Object.entries(MIDI.keyToNote)
-  .map((it) => ({
+  .map(it => ({
     name: it[0],
     value: it[1],
   }))
   .sort((a, b) => a.value - b.value);
-export const NOTE_TO_KEY = Object.entries(MIDI.keyToNote).reduce((o, c) => {
-  o[c[1]] = c[0];
-  return o;
-}, /** @type {Record<number, string>} */ ({}));
+export const NOTE_TO_KEY = Object.entries(MIDI.keyToNote).reduce(
+  (o, c) => {
+    o[c[1]] = c[0];
+    return o;
+  },
+  /** @type {Record<number, string>} */ ({})
+);
 
 const state = Vue.observable({
   loading: true,
@@ -47,7 +50,7 @@ const state = Vue.observable({
       // for other sounds install the MIDI.js
       // soundfonts somewhere.
       instruments: [
-        ...new Set(options["sound-item"].channels.map((i) => i.program.id)),
+        ...new Set(options["sound-item"].channels.map(i => i.program.id)),
       ], // or the instrument code 1 (aka the default)
       soundfontUrl: "https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/",
       onerror: console.warn,
@@ -67,9 +70,7 @@ const state = Vue.observable({
   const inst = new Vue({});
   inst.$watch(
     () => {
-      return options["sound-item"].channels
-        .map((it) => it.program.id)
-        .join("|");
+      return options["sound-item"].channels.map(it => it.program.id).join("|");
     },
     () => {
       loadPrograms();

@@ -65,39 +65,35 @@ export default {
       if (xd >= 0 && yd >= 0) {
         const xMiddle = (x1 + x2) / 2;
         path += `M ${x1 + xOriginOffset} ${y1 + yOriginOffset} `;
-        path += `L ${xMiddle - curveSize + xOriginOffset} ${
-          y1 + yOriginOffset
-        } `;
+        path += `L ${xMiddle - curveSize + xOriginOffset} ${y1 +
+          yOriginOffset} `;
         path += `Q ${xMiddle + xOriginOffset} ${y1 + yOriginOffset},
-                   ${xMiddle + xOriginOffset} ${
-          y1 + curveSize + yOriginOffset
-        } `;
-        path += `L ${xMiddle + xOriginOffset} ${
-          y2 - curveSize + yOriginOffset
-        } `;
+                   ${xMiddle + xOriginOffset} ${y1 +
+          curveSize +
+          yOriginOffset} `;
+        path += `L ${xMiddle + xOriginOffset} ${y2 -
+          curveSize +
+          yOriginOffset} `;
         path += `Q ${xMiddle + xOriginOffset} ${y2 + yOriginOffset},
-                   ${xMiddle + curveSize + xOriginOffset} ${
-          y2 + yOriginOffset
-        } `;
+                   ${xMiddle + curveSize + xOriginOffset} ${y2 +
+          yOriginOffset} `;
         path += `L ${x2 + xOriginOffset} ${y2 + yOriginOffset} `;
       }
       if (xd >= 0 && yd < 0) {
         const xMiddle = (x1 + x2) / 2;
         path += `M ${x1 + xOriginOffset} ${y1 + yOriginOffset} `;
-        path += `L ${xMiddle - curveSize + xOriginOffset} ${
-          y1 + yOriginOffset
-        } `;
+        path += `L ${xMiddle - curveSize + xOriginOffset} ${y1 +
+          yOriginOffset} `;
         path += `Q ${xMiddle + xOriginOffset} ${y1 + yOriginOffset},
-                   ${xMiddle + xOriginOffset} ${
-          y1 - curveSize + yOriginOffset
-        } `;
-        path += `L ${xMiddle + xOriginOffset} ${
-          y2 + curveSize + yOriginOffset
-        } `;
+                   ${xMiddle + xOriginOffset} ${y1 -
+          curveSize +
+          yOriginOffset} `;
+        path += `L ${xMiddle + xOriginOffset} ${y2 +
+          curveSize +
+          yOriginOffset} `;
         path += `Q ${xMiddle + xOriginOffset} ${y2 + yOriginOffset},
-                   ${xMiddle + curveSize + xOriginOffset} ${
-          y2 + yOriginOffset
-        } `;
+                   ${xMiddle + curveSize + xOriginOffset} ${y2 +
+          yOriginOffset} `;
         path += `L ${x2 + xOriginOffset} ${y2 + yOriginOffset} `;
       }
       if (xd < 0 && yd >= 0) {
@@ -106,13 +102,13 @@ export default {
 
         // R D
         path += `Q ${x1 + curveSize + xOriginOffset} ${y1 + yOriginOffset}
-                   ${x1 + curveSize + xOriginOffset} ${
-          y1 + curveSize + yOriginOffset
-        } `;
+                   ${x1 + curveSize + xOriginOffset} ${y1 +
+          curveSize +
+          yOriginOffset} `;
         // D
-        path += `L ${x1 + curveSize + xOriginOffset} ${
-          yMiddle - curveSize + yOriginOffset
-        } `;
+        path += `L ${x1 + curveSize + xOriginOffset} ${yMiddle -
+          curveSize +
+          yOriginOffset} `;
 
         // D L
         path += `Q ${x1 + curveSize + xOriginOffset} ${yMiddle + yOriginOffset} 
@@ -122,17 +118,16 @@ export default {
         path += `L ${x2 + xOriginOffset} ${yMiddle + yOriginOffset} `;
 
         // L D
-        path += `Q ${x2 - curveSize + xOriginOffset} ${
-          yMiddle + yOriginOffset
-        } ,
-                   ${x2 - curveSize + xOriginOffset} ${
-          yMiddle + curveSize + yOriginOffset
-        } `;
+        path += `Q ${x2 - curveSize + xOriginOffset} ${yMiddle +
+          yOriginOffset} ,
+                   ${x2 - curveSize + xOriginOffset} ${yMiddle +
+          curveSize +
+          yOriginOffset} `;
 
         // D
-        path += `L ${x2 - curveSize + xOriginOffset} ${
-          y2 - curveSize + yOriginOffset
-        } `;
+        path += `L ${x2 - curveSize + xOriginOffset} ${y2 -
+          curveSize +
+          yOriginOffset} `;
 
         // D R
         path += `Q ${x2 - curveSize + xOriginOffset} ${y2 + yOriginOffset} ,
@@ -144,13 +139,13 @@ export default {
 
         // R D
         path += `Q ${x1 + curveSize + xOriginOffset} ${y1 + yOriginOffset}
-                   ${x1 + curveSize + xOriginOffset} ${
-          y1 - curveSize + yOriginOffset
-        } `;
+                   ${x1 + curveSize + xOriginOffset} ${y1 -
+          curveSize +
+          yOriginOffset} `;
         // D
-        path += `L ${x1 + curveSize + xOriginOffset} ${
-          yMiddle + curveSize + yOriginOffset
-        } `;
+        path += `L ${x1 + curveSize + xOriginOffset} ${yMiddle +
+          curveSize +
+          yOriginOffset} `;
 
         // D L
         path += `Q ${x1 + curveSize + xOriginOffset} ${yMiddle + yOriginOffset} 
@@ -160,30 +155,29 @@ export default {
         path += `L ${x2 + xOriginOffset} ${yMiddle + yOriginOffset} `;
 
         // L D
-        path += `Q ${x2 - curveSize + xOriginOffset} ${
-          yMiddle + yOriginOffset
-        } ,
-                   ${x2 - curveSize + xOriginOffset} ${
-          yMiddle - curveSize + yOriginOffset
-        } `;
+        path += `Q ${x2 - curveSize + xOriginOffset} ${yMiddle +
+          yOriginOffset} ,
+                   ${x2 - curveSize + xOriginOffset} ${yMiddle -
+          curveSize +
+          yOriginOffset} `;
 
         // D
-        path += `L ${x2 - curveSize + xOriginOffset} ${
-          y2 + curveSize + yOriginOffset
-        } `;
+        path += `L ${x2 - curveSize + xOriginOffset} ${y2 +
+          curveSize +
+          yOriginOffset} `;
 
         // D R
         path += `Q ${x2 - curveSize + xOriginOffset} ${y2 + yOriginOffset} ,
                    ${x2 + xOriginOffset} ${y2 + yOriginOffset} `;
       }
 
-      const anglePath = `M ${x2 - 12 + xOriginOffset} ${
-        y2 - 12 + yOriginOffset
-      } 
+      const anglePath = `M ${x2 - 12 + xOriginOffset} ${y2 -
+        12 +
+        yOriginOffset} 
                          L ${x2 + xOriginOffset} ${y2 + yOriginOffset} 
-                         L ${x2 - 12 + xOriginOffset} ${
-        y2 + 12 + yOriginOffset
-      } 
+                         L ${x2 - 12 + xOriginOffset} ${y2 +
+        12 +
+        yOriginOffset} 
       `;
 
       return {

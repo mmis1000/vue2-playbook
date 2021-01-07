@@ -90,7 +90,9 @@ const output = {
 
 const createComponent = () => {
   const dock = Vue.observable({
-    id: Math.random().toString(16).slice(2),
+    id: Math.random()
+      .toString(16)
+      .slice(2),
     type: "output",
     owner: null,
     links: [],
@@ -98,7 +100,9 @@ const createComponent = () => {
   });
 
   const item = Vue.observable({
-    id: Math.random().toString(16).slice(2),
+    id: Math.random()
+      .toString(16)
+      .slice(2),
     renderType: "output-pulse-item",
     _value: false,
     _persistTime: 4,
@@ -128,7 +132,7 @@ export const declaration = {
     },
   ],
   components: {
-    "output-pulse-item": () => import(__filename).then((it) => it.default),
+    "output-pulse-item": () => import(__filename).then(it => it.default),
   },
   types: [output],
 };

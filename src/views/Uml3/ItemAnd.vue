@@ -141,21 +141,27 @@ const output = {
 };
 const createComponent = () => {
   const dockIn1 = Vue.observable({
-    id: Math.random().toString(16).slice(2),
+    id: Math.random()
+      .toString(16)
+      .slice(2),
     type: "input",
     owner: null,
     links: [],
     ...input1,
   });
   const dockIn2 = Vue.observable({
-    id: Math.random().toString(16).slice(2),
+    id: Math.random()
+      .toString(16)
+      .slice(2),
     type: "input",
     owner: null,
     links: [],
     ...input2,
   });
   const dockOut = Vue.observable({
-    id: Math.random().toString(16).slice(2),
+    id: Math.random()
+      .toString(16)
+      .slice(2),
     type: "output",
     owner: null,
     links: [],
@@ -163,7 +169,9 @@ const createComponent = () => {
   });
 
   const item = Vue.observable({
-    id: Math.random().toString(16).slice(2),
+    id: Math.random()
+      .toString(16)
+      .slice(2),
     renderType: "and-item",
     _valueIn1: false,
     _valueIn2: false,
@@ -200,7 +208,7 @@ export const declaration = {
     },
   ],
   components: {
-    "and-item": () => import(__filename).then((it) => it.default),
+    "and-item": () => import(__filename).then(it => it.default),
   },
   types: [input1, input2, output],
 };

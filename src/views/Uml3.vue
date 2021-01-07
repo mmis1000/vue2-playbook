@@ -23,7 +23,7 @@
       :is="value.renderType"
       :key="key"
       :item="value"
-      :options="options"
+      :options="draggableOptions"
       class="item"
       :class="{ target: targetId === value.id }"
     ></component>
@@ -59,10 +59,7 @@
       :selected="targetPanelSelected"
       :position="panelPosition.config"
     />
-    <RunInterval
-      :interval="childPanelOptions.global.timerInterval / 2"
-      @tick="onTick"
-    />
+    <RunInterval :interval="options.global.timerInterval / 2" @tick="onTick" />
   </div>
 </template>
 
@@ -82,6 +79,31 @@ import LinkCurved from "./Uml3/LinkCurved";
 import PanelControl from "./Uml3/PanelControl";
 import RunInterval from "@/components/RunInterval.vue";
 
+const defs = [
+  itemOutputDef,
+  itemOutputPulseDef,
+  itemInputDef,
+  itemSoundDef,
+  itemRelayDef,
+  itemNotDef,
+  itemAndDef,
+  itemXorDef,
+  itemXnorDef,
+];
+
+const types = defs.flatMap(d => d.types ?? []);
+
+const fixType = o => {
+  if (o.$type) {
+    const type = types.find(t => t.$type === o.$type);
+    if (type) {
+      Object.assign(o, type);
+    }
+  }
+
+  return o;
+};
+
 /**
  * @typedef {Object} Timer
  * @property {'read'|'write'} state
@@ -90,15 +112,7 @@ import RunInterval from "@/components/RunInterval.vue";
 
 export default {
   components: {
-    ...itemXorDef.components,
-    ...itemInputDef.components,
-    ...itemOutputDef.components,
-    ...itemXnorDef.components,
-    ...itemOutputPulseDef.components,
-    ...itemNotDef.components,
-    ...itemRelayDef.components,
-    ...itemAndDef.components,
-    ...itemSoundDef.components,
+    ...defs.map(d => d.components).reduce((o, c) => ({ ...o, ...c }), {}),
     Dock,
     UmlLink: Link,
     UmlLinkCurved: LinkCurved,
@@ -131,13 +145,15 @@ export default {
         },
       },
       timeoutId: null,
-      childPanelOptions: {
+      options: {
         global: {
           timerInterval: 100,
         },
-        ...itemSoundDef.options,
+        ...defs
+          .flatMap(i => (i.options ? [i.options] : []))
+          .reduce((o, c) => ({ ...o, ...c }), {}),
       },
-      childPanelConfig: [
+      panelConfig: [
         {
           title: "System",
           items: [
@@ -150,7 +166,7 @@ export default {
             },
           ],
         },
-        ...itemSoundDef.optionsPanel,
+        ...defs.flatMap(i => i.optionsPanel ?? []),
       ],
       targetPanelOptions: {},
       targetPanelConfig: [],
@@ -162,17 +178,7 @@ export default {
       },
       curved: true,
       grided: true,
-      menu: [
-        ...itemOutputDef.menu,
-        ...itemOutputPulseDef.menu,
-        ...itemInputDef.menu,
-        ...itemSoundDef.menu,
-        ...itemRelayDef.menu,
-        ...itemNotDef.menu,
-        ...itemAndDef.menu,
-        ...itemXorDef.menu,
-        ...itemXnorDef.menu,
-      ],
+      menu: defs.flatMap(i => i.menu),
       /** @type {Record<string,any>} */
       items: {
         /*
@@ -219,7 +225,7 @@ export default {
      */
     fullPanelOptions() {
       return {
-        ...this.childPanelOptions,
+        ...this.options,
         ...this.targetPanelOptions,
       };
     },
@@ -229,7 +235,7 @@ export default {
     fullPanelConfig() {
       return [
         ...this.targetPanelConfig,
-        ...this.childPanelConfig.map((i) => ({
+        ...this.panelConfig.map(i => ({
           ...i,
           title: i.title + " (Global)",
         })),
@@ -238,7 +244,7 @@ export default {
     /**
      * @return {Record<string,any>}
      */
-    options() {
+    draggableOptions() {
       if (this.grided) {
         return {
           gridPassive: [20, 20],
@@ -253,7 +259,9 @@ export default {
   },
   methods: {
     newId() {
-      return Math.random().toString(16).slice(2);
+      return Math.random()
+        .toString(16)
+        .slice(2);
     },
     newLink() {
       const id = this.newId();
@@ -297,7 +305,7 @@ export default {
         }
 
         if (
-          first.links.find((it) => {
+          first.links.find(it => {
             if (first.type === "output") {
               return it.output.id === dock.id;
             } else {
@@ -343,29 +351,68 @@ export default {
     },
     mapObject(o, cb) {
       return Object.entries(o)
-        .map((e) => [e[0], cb(e[1])])
+        .map(e => [e[0], cb(e[1])])
         .reduce((o, c) => ((o[c[0]] = c[1]), o), {});
     },
     exportData() {
-      const items = this.mapObject(this.items, (e) => ({
+      const items = this.mapObject(this.items, e => ({
         ...e,
-        inputs: e.inputs.map((i) => i.id),
-        outputs: e.outputs.map((i) => i.id),
+        inputs: e.inputs.map(i => i.id),
+        outputs: e.outputs.map(i => i.id),
       }));
 
-      const docks = this.mapObject(this.docks, (e) => ({
+      const docks = this.mapObject(this.docks, e => ({
         ...e,
-        links: e.links.map((l) => l.id),
+        links: e.links.map(l => l.id),
         owner: e.owner.id,
       }));
 
-      const links = this.mapObject(this.links, (e) => ({
+      const links = this.mapObject(this.links, e => ({
         ...e,
         input: e.input.id,
         output: e.output.id,
       }));
 
-      console.log(JSON.stringify({ items, docks, links }, 0, 4));
+      console.log(
+        JSON.stringify({ items, docks, links, options: this.options }, 0, 4)
+      );
+    },
+    importData({ items, docks, links, options }) {
+      const fixedItems = this.mapObject(items, e => e);
+      const fixedDocks = this.mapObject(docks, e => fixType(e));
+      const fixedLinks = this.mapObject(links, e => e);
+
+      for (const item of Object.values(fixedItems)) {
+        item.inputs = item.inputs.map(id => fixedDocks[id]);
+        item.outputs = item.outputs.map(id => fixedDocks[id]);
+      }
+      for (const dock of Object.values(fixedDocks)) {
+        dock.links = dock.links.map(id => fixedLinks[id]);
+        dock.owner = fixedItems[dock.owner];
+      }
+      for (const link of Object.values(fixedLinks)) {
+        link.input = fixedDocks[link.input];
+        link.output = fixedDocks[link.output];
+      }
+
+      console.log({
+        items: fixedItems,
+        docks: fixedDocks,
+        links: fixedLinks,
+        options,
+      });
+
+      this.items = fixedItems;
+      this.docks = fixedDocks;
+      this.links = fixedLinks;
+
+      // this must start from read to prevent desync
+      this.timer.state == "read";
+      this.timer.ops == 0;
+
+      for (let domain of Object.keys(options)) {
+        Object.assign(this.options[domain], options[domain]);
+      }
     },
   },
   mounted() {

@@ -43,7 +43,7 @@ const input = {
   $type: prefix + "input",
   getValue() {
     return this.links
-      .map((link) => {
+      .map(link => {
         return link.input.getValue();
       })
       .reduce((x, y) => x || y, false);
@@ -55,10 +55,11 @@ const input = {
     };
   },
 };
-
 const createComponent = () => {
   const dock = Vue.observable({
-    id: Math.random().toString(16).slice(2),
+    id: Math.random()
+      .toString(16)
+      .slice(2),
     type: "input",
     owner: null,
     links: [],
@@ -66,7 +67,9 @@ const createComponent = () => {
   });
 
   const item = Vue.observable({
-    id: Math.random().toString(16).slice(2),
+    id: Math.random()
+      .toString(16)
+      .slice(2),
     renderType: "input-item",
     x: 0,
     y: 0,
@@ -92,7 +95,7 @@ export const declaration = {
     },
   ],
   components: {
-    "input-item": () => import(__filename).then((it) => it.default),
+    "input-item": () => import(__filename).then(it => it.default),
   },
   types: [input],
 };

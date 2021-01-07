@@ -32,7 +32,7 @@ export default {
 
 export const registers = {
   components: {
-    "default-dock": () => import(__filename).then((it) => it.default),
+    "default-dock": () => import(__filename).then(it => it.default),
   },
 };
 </script>

@@ -141,7 +141,9 @@ const output = {
 
 const createComponent = () => {
   const dockIn1 = Vue.observable({
-    id: Math.random().toString(16).slice(2),
+    id: Math.random()
+      .toString(16)
+      .slice(2),
     type: "input",
     owner: null,
     links: [],
@@ -149,7 +151,9 @@ const createComponent = () => {
   });
 
   const dockIn2 = Vue.observable({
-    id: Math.random().toString(16).slice(2),
+    id: Math.random()
+      .toString(16)
+      .slice(2),
     type: "input",
     owner: null,
     links: [],
@@ -157,7 +161,9 @@ const createComponent = () => {
   });
 
   const dockOut = Vue.observable({
-    id: Math.random().toString(16).slice(2),
+    id: Math.random()
+      .toString(16)
+      .slice(2),
     type: "output",
     owner: null,
     links: [],
@@ -165,7 +171,9 @@ const createComponent = () => {
   });
 
   const item = Vue.observable({
-    id: Math.random().toString(16).slice(2),
+    id: Math.random()
+      .toString(16)
+      .slice(2),
     renderType: "xor-item",
     _valueIn1: false,
     _valueIn2: false,
@@ -202,7 +210,7 @@ export const declaration = {
     },
   ],
   components: {
-    "xor-item": () => import(__filename).then((it) => it.default),
+    "xor-item": () => import(__filename).then(it => it.default),
   },
   types: [input1, input2, output],
 };
