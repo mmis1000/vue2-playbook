@@ -88,6 +88,7 @@ import PanelControl from "./Uml3/PanelControl";
 import RunInterval from "@/components/RunInterval.vue";
 import DialogExport from "./Uml3/DialogExport";
 import DialogImport from "./Uml3/DialogImport";
+import { sample as sample0 } from "./Uml3/Samples/sample0";
 
 const defs = [
   itemOutputDef,
@@ -100,6 +101,10 @@ const defs = [
   itemXorDef,
   itemXnorDef,
 ];
+
+const samples = {
+  sample0,
+};
 
 const types = defs.flatMap((d) => d.types ?? []);
 
@@ -589,6 +594,10 @@ export default {
     const panelHeight = this.$refs.panelControl.$el.offsetHeight;
     this.options.panels.config.x = (containerWidth - panelWidth) / 2;
     this.options.panels.config.y = containerHeight - panelHeight - 40;
+
+    if (this.$route.query.sample) {
+      this.importData(samples[this.$route.query.sample]);
+    }
   },
 };
 </script>

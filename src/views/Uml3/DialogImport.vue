@@ -2,7 +2,7 @@
   <div v-if="value" class="dialog">
     <div class="title">Export</div>
     <div class="text">
-      <textarea v-model="text"></textarea>
+      <textarea v-model="text" placeholder="(paste save here)"></textarea>
     </div>
     <div class="buttons">
       <button class="close" @click="$emit('input', false)">Close</button>

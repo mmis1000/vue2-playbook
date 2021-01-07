@@ -116,10 +116,10 @@ export default {
      */
     mappedPanels() {
       const self = this;
-      return this.panelConfig.map(panel => {
+      return this.panelConfig.map((panel) => {
         return {
           title: panel.title,
-          items: panel.items.map(item => {
+          items: panel.items.map((item) => {
             switch (item.type) {
               case "select":
                 return {
@@ -188,7 +188,6 @@ export default {
     overflow-y: auto;
     &.hide {
       height: 0;
-      overflow: hidden;
     }
 
     .panel {
